@@ -7,7 +7,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
+<<<<<<< HEAD
         target: "https://health-care-coral-one.vercel.app/",
+=======
+        target: "https://health-care-ashy-five.vercel.app/",
+>>>>>>> 0951af5 (profil Up)
         changeOrigin: true,
         secure: false,
         // rewrite: (path) => path.replace(/^\/api/, ""),

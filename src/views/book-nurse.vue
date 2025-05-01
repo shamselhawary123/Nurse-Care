@@ -78,7 +78,19 @@ onMounted(() => {
       </div>
 
       <div v-else class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+<<<<<<< HEAD
         <h1 class="text-3xl font-bold text-primary mb-6 text-center">
+=======
+        <button
+          type="button"
+          @click="router.back()"
+          class="mb-4 flex items-center text-[#007b8f] hover:text-blue-700 font-medium focus:outline-none"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+          رجوع
+        </button>
+        <h1 class="text-3xl font-bold text-[#007b8f] mb-6 text-center">
+>>>>>>> 0951af5 (profil Up)
           حجز موعد مع {{ nurseName }}
         </h1>
 
