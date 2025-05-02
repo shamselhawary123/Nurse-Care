@@ -169,7 +169,8 @@
     <section class="hero">
       <div class="hero-image">
         <!-- <img src="/img/content.png" alt="ممرضة ترعى سيدة مسنة" /> -->
-        <img src="/img/home1.png" alt="ممرضة ترعى سيدة مسنة" />
+        <!-- <img src="/img/home1.png" alt="ممرضة ترعى سيدة مسنة" /> -->
+        <img src="/img/Nurs home.png" alt="مرحبا بكم في NursCare" />
         <!-- <img src="/img/hh.png" alt="ممرضة ترعى سيدة مسنة" /> -->
       </div>
     </section>
@@ -179,7 +180,7 @@
 
       <div class="slider-container">
         <button class="nav-button prev" @click="prevSlide">
-          <i class="fas fa-chevron-right"></i>
+          <i class="fas fa-chevron-left"></i>
         </button>
 
         <div class="services-slider">
@@ -408,9 +409,9 @@
     justify-content: space-between;
   }
 
-  .service-content:hover {
+  /* .service-content:hover {
     transform: translateY(-10px);
-  }
+  } */
 
   .service-image {
     width: 150px;

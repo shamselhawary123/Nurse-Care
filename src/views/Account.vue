@@ -1,6 +1,16 @@
 <template>
   <div class="account-settings">
-    <aside class="sidebar">
+    <!-- Sidebar Overlay for mobile -->
+    <div v-if="showSidebar && isMobile" class="sidebar-overlay" @click="showSidebar = false"></div>
+    <!-- Sidebar Toggle Button (moved below header, before sidebar) -->
+    <button class="sidebar-toggle" v-if="!showSidebar" @click="showSidebar = true">
+      <i class="fas fa-bars"></i>
+    </button>
+    <!-- Sidebar -->
+    <aside :class="['sidebar', { 'sidebar-hidden': !showSidebar }]">
+      <button class="close-sidebar" v-if="showSidebar && isMobile" @click="showSidebar = false">
+        <i class="fas fa-times"></i>
+      </button>
       <h2 class="sidebar-title text-center">الاعدادات</h2>
       <ul class="sidebar-menu">
         <li class="active"><i class="fas fa-pen"></i> تعديل الملف الشخصي</li>
@@ -10,7 +20,7 @@
         <li><i class="fas fa-question-circle"></i> المساعدة</li>
       </ul>
     </aside>
-    <main class="profile-main">
+    <main :class="['profile-main', { 'sidebar-open': showSidebar && isMobile }]">
       <div class="profile-header">
         <div class="header-content">
           <h1>تعديل الملف الشخصي</h1>
@@ -111,6 +121,19 @@ const user = ref<any>(null);
 const form = ref<any>({});
 const photoPreview = ref<string | null>(null);
 const photoFile = ref<File | null>(null);
+const showSidebar = ref(window.innerWidth >= 900); // Sidebar is visible by default on desktop
+const isMobile = ref(window.innerWidth < 900);
+
+const handleResize = () => {
+  isMobile.value = window.innerWidth < 900;
+  if (!isMobile.value) showSidebar.value = true;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+  console.log('Component mounted, fetching user data...');
+  fetchUser();
+});
 
 const fetchUser = async () => {
   const token = localStorage.getItem('token');
@@ -316,11 +339,6 @@ watch(user, (newValue) => {
 watch(form, (newValue) => {
   console.log('Form data changed:', newValue);
 }, { deep: true });
-
-onMounted(() => {
-  console.log('Component mounted, fetching user data...');
-  fetchUser();
-});
 </script>
 
 <style scoped>
@@ -329,6 +347,43 @@ onMounted(() => {
   min-height: 100vh;
   background: #fff;
   direction: rtl;
+  position: relative;
+}
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 999;
+  transition: opacity 0.3s;
+}
+.sidebar-toggle {
+  /* margin: 16px 0 16px 16px; */
+  background: #007b8f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: block;
+}
+.sidebar-toggle:hover {
+  background: #006476;
+}
+.close-sidebar {
+  background: transparent;
+  color: #ff4444;
+  border: none;
+  font-size: 1.2rem;
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  cursor: pointer;
+  z-index: 1200;
 }
 .sidebar {
   width: 220px;
@@ -336,6 +391,14 @@ onMounted(() => {
   border-right: 1px solid #eee;
   padding: 32px 0 0 0;
   min-height: 100vh;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  z-index: 1001;
+}
+.sidebar-hidden {
+  transform: translateX(110%);
+  box-shadow: none;
 }
 .sidebar-title {
   font-size: 1.2rem;
@@ -544,5 +607,72 @@ textarea:focus {
   background: #fff;
   outline: none;
   box-shadow: 0 0 0 2px rgba(0, 123, 143, 0.1);
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 80vw;
+    min-width: 220px;
+    max-width: 350px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    z-index: 1001;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    background: #f8fafc;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
+    transform: translateX(0);
+  }
+  .sidebar-hidden {
+    transform: translateX(110%);
+    box-shadow: none;
+  }
+  .profile-main {
+    padding: 24px 8px 0 8px;
+    transition: filter 0.3s;
+  }
+  .profile-main.sidebar-open {
+    filter: blur(2px) grayscale(0.2) brightness(0.95);
+    pointer-events: none;
+    user-select: none;
+  }
+  .profile-header h1, .sidebar-title {
+    font-size: 1.3rem;
+  }
+  .form-group label, .form-group input, .form-group textarea {
+    font-size: 1.05rem;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .form-actions button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+@media (min-width: 900px) {
+  .sidebar-toggle {
+    display: none;
+  }
+  .sidebar {
+    transform: none !important;
+    position: relative;
+    box-shadow: none;
+    width: 220px;
+  }
+  .close-sidebar {
+    display: none;
+  }
+  .sidebar-overlay {
+    display: none;
+  }
+  .profile-main.sidebar-open {
+    filter: none;
+    pointer-events: auto;
+    user-select: auto;
+  }
 }
 </style> 

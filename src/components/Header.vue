@@ -1,9 +1,5 @@
 <script setup lang="ts">
-<<<<<<< HEAD
-  import { ref } from "vue";
-=======
   import { ref, computed, onMounted, watchEffect } from "vue";
->>>>>>> 0951af5 (profil Up)
   import { useRouter } from "vue-router";
 
   defineOptions({
@@ -12,11 +8,9 @@
 
   const router = useRouter();
   const isDarkMode = ref(false);
-<<<<<<< HEAD
-=======
   const user = ref<any>(null);
   const isLoggedIn = ref(false);
->>>>>>> 0951af5 (profil Up)
+  const isNavOpen = ref(false);
 
   const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
@@ -26,15 +20,13 @@
   const navigateToLogin = () => {
     router.push("/login");
   };
-<<<<<<< HEAD
-=======
 
   const fetchUser = async () => {
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
-    if (!token || !userId || userId === 'undefined') {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    if (!token || !userId || userId === "undefined") {
       // Redirect to login or show an error
-      router.push('/login');
+      router.push("/login");
       return;
     }
     isLoggedIn.value = true;
@@ -45,49 +37,63 @@
       });
       if (res.ok) {
         user.value = await res.json();
-        localStorage.setItem('userId', user.value.data._id);
+        localStorage.setItem("userId", user.value.data._id);
       }
-    } catch (e) { user.value = null; }
+    } catch (e) {
+      user.value = null;
+    }
   };
 
   const checkLogin = () => {
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
-    console.log('Header checkLogin:', { token, userId });
-    isLoggedIn.value = !!token && !!userId && userId !== 'undefined';
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    console.log("Header checkLogin:", { token, userId });
+    isLoggedIn.value = !!token && !!userId && userId !== "undefined";
+  };
+
+  const toggleNav = () => {
+    isNavOpen.value = !isNavOpen.value;
+  };
+
+  const closeNav = () => {
+    isNavOpen.value = false;
   };
 
   onMounted(() => {
     checkLogin();
     fetchUser();
-    window.addEventListener('storage', checkLogin);
-    window.addEventListener('user-logged-in', () => {
+    window.addEventListener("storage", checkLogin);
+    window.addEventListener("user-logged-in", () => {
       checkLogin();
       fetchUser();
     });
-    console.log('Header mounted, isLoggedIn:', isLoggedIn.value);
+    console.log("Header mounted, isLoggedIn:", isLoggedIn.value);
   });
 
   watchEffect(() => {
     checkLogin();
   });
->>>>>>> 0951af5 (profil Up)
 </script>
 
 <template>
   <header class="header">
     <div class="container">
+      <!-- Hamburger Icon (Mobile Only) -->
+      <button class="hamburger" @click="toggleNav" aria-label="Toggle navigation">
+        <span :class="{'open': isNavOpen}"></span>
+        <span :class="{'open': isNavOpen}"></span>
+        <span :class="{'open': isNavOpen}"></span>
+      </button>
       <!-- Icons -->
       <div class="icons">
         <i
           class="fas fa-search cursor-pointer hover:text-primary transition-colors"></i>
-<<<<<<< HEAD
-        <i
-          class="fas fa-user cursor-pointer hover:text-primary transition-colors"
-          @click="navigateToLogin"></i>
-=======
         <template v-if="isLoggedIn && user?.data?.personalPhoto">
-          <img :src="user.data?.personalPhoto" alt="User Photo" class="user-photo cursor-pointer" @click="router.push('/account')" />
+          <img
+            :src="user.data?.personalPhoto"
+            alt="User Photo"
+            class="user-photo cursor-pointer"
+            @click="router.push('/account')" />
         </template>
         <template v-else>
           <i
@@ -100,10 +106,8 @@
             class="fas fa-cog cursor-pointer hover:text-primary transition-colors"
             @click="router.push('/account')"
             title="إعدادات الحساب"
-            style="font-size: 1.3rem; margin-right: 0.5rem;"
-          ></i>
+            style="font-size: 1.3rem; margin-right: 0.5rem"></i>
         </template>
->>>>>>> 0951af5 (profil Up)
         <i
           v-if="!isDarkMode"
           @click="toggleDarkMode"
@@ -115,22 +119,26 @@
       </div>
 
       <!-- Navigation Menu -->
-      <nav class="nav">
-        <router-link to="/" class="nav-link">الرئيسية</router-link>
-        <router-link to="/about" class="nav-link">حول</router-link>
-        <router-link to="/services" class="nav-link">الخدمات</router-link>
-        <router-link to="/contact" class="nav-link">اتصل بنا</router-link>
-<<<<<<< HEAD
-        <router-link to="/login" class="nav-link">تسجيل الدخول</router-link>
-=======
-        <router-link v-if="isLoggedIn" to="/account" class="nav-link text-[#007b8f]">ادارة الحساب</router-link>
-        <router-link v-else to="/login" class="nav-link">تسجيل الدخول</router-link>
->>>>>>> 0951af5 (profil Up)
+      <nav class="nav" :class="{ active: isNavOpen }">
+        <router-link to="/" class="nav-link" @click="closeNav">الرئيسية</router-link>
+        <router-link to="/about" class="nav-link" @click="closeNav">حول</router-link>
+        <router-link to="/services" class="nav-link" @click="closeNav">الخدمات</router-link>
+        <router-link to="/contact" class="nav-link" @click="closeNav">اتصل بنا</router-link>
+        <router-link
+          v-if="isLoggedIn"
+          to="/account"
+          class="nav-link text-[#007b8f]"
+          @click="closeNav"
+          >ادارة الحساب</router-link
+        >
+        <router-link v-else to="/login" class="nav-link" @click="closeNav"
+          >تسجيل الدخول</router-link
+        >
       </nav>
 
       <!-- Logo -->
       <div class="logo">
-        <img src="/img/logo.png" alt="Logo" />
+        <img src="/img/logo (3).png" alt="Logo" />
       </div>
     </div>
   </header>
@@ -190,7 +198,7 @@
   }
 
   .logo img {
-    height: 40px;
+    height: 60px;
     width: auto;
   }
 
@@ -223,6 +231,12 @@
       padding: 1rem;
     }
 
+    .hamburger {
+      display: flex;
+    }
+    .icons {
+      margin-left: auto;
+    }
     .nav {
       display: none;
       position: absolute;
@@ -235,18 +249,15 @@
       align-items: center;
       gap: 1rem;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1050;
     }
-
     .nav.active {
       display: flex;
     }
-
     .dark-mode .nav {
       background-color: #2d2d2d;
     }
   }
-<<<<<<< HEAD
-=======
 
   .user-photo {
     width: 32px;
@@ -255,5 +266,38 @@
     object-fit: cover;
     border: 2px solid #007b8f;
   }
->>>>>>> 0951af5 (profil Up)
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+    position: absolute;
+    right: 1rem;
+    top: 1.2rem;
+  }
+  .hamburger span {
+    display: block;
+    width: 28px;
+    height: 3px;
+    margin: 4px 0;
+    background: #333;
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+  .hamburger span.open:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .hamburger span.open:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger span.open:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
 </style>

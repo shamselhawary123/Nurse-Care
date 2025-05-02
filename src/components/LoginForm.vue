@@ -1,9 +1,5 @@
 <script setup lang="ts">
-<<<<<<< HEAD
-import { ref } from 'vue'
-=======
 import { ref, onMounted } from 'vue'
->>>>>>> 0951af5 (profil Up)
 import { useRouter } from 'vue-router'
 import { login } from '../api/auth'
 import { useForm, useField } from 'vee-validate'
@@ -43,12 +39,8 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password
     })
     console.log('Login successful:', response)
-<<<<<<< HEAD
-    router.push('/dashboard') // Redirect to dashboard or appropriate page
-=======
     window.dispatchEvent(new Event('user-logged-in'));
     router.push('/') // Redirect to home page after login
->>>>>>> 0951af5 (profil Up)
   } catch (err: any) {
     error.value = err.response?.data?.message || 'حدث خطأ أثناء تسجيل الدخول'
     console.error('Login error:', err)
@@ -64,13 +56,10 @@ const goToSignUp = () => {
 const goToForgotPassword = () => {
   router.push('/forgot-password')
 }
-<<<<<<< HEAD
-=======
 
 onMounted(() => {
   // No need to checkLogin or fetchUser or log isLoggedIn here
 });
->>>>>>> 0951af5 (profil Up)
 </script>
 
 <template>

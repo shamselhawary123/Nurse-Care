@@ -110,16 +110,12 @@ const router = createRouter({
       component: () => import("../views/Dashboard.vue"),
       meta: { requiresAuth: true },
     },
-<<<<<<< HEAD
-=======
-
     {
       path: "/account",
       name: "account",
       component: () => import("../views/Account.vue"),
       meta: { requiresAuth: true },
     },
->>>>>>> 0951af5 (profil Up)
   ],
 });
 

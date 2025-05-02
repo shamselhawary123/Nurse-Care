@@ -86,13 +86,6 @@ export const login = async (credentials: LoginCredentials) => {
   try {
     const response = await api.post("/auth/login", credentials);
     localStorage.setItem("token", response.data.token);
-<<<<<<< HEAD
-    // if (response.data.user?._id) {
-    //   localStorage.setItem("userId", response.data.user._id);
-    // }
-
-    localStorage.setItem("userId", response.data._id);
-=======
     // Set userId from the correct place in the response
     if (response.data.user && response.data.user._id) {
       localStorage.setItem("userId", response.data.user._id);
@@ -103,7 +96,6 @@ export const login = async (credentials: LoginCredentials) => {
     } else {
       localStorage.removeItem("userId");
     }
->>>>>>> 0951af5 (profil Up)
     return response.data;
   } catch (error) {
     throw error;

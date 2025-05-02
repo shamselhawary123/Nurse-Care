@@ -78,9 +78,6 @@ onMounted(() => {
       </div>
 
       <div v-else class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-<<<<<<< HEAD
-        <h1 class="text-3xl font-bold text-primary mb-6 text-center">
-=======
         <button
           type="button"
           @click="router.back()"
@@ -90,7 +87,6 @@ onMounted(() => {
           رجوع
         </button>
         <h1 class="text-3xl font-bold text-[#007b8f] mb-6 text-center">
->>>>>>> 0951af5 (profil Up)
           حجز موعد مع {{ nurseName }}
         </h1>
 

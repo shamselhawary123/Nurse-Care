@@ -206,7 +206,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.6); /* تدرج لوني خفيف */
+    /* background: rgba(255, 255, 255, 0.6);  تدرج لوني خفيف */
     z-index: 1;
     border-radius: 10px;
   }
