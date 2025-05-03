@@ -39,6 +39,8 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password
     })
     console.log('Login successful:', response)
+    // Save token to localStorage
+    localStorage.setItem('token', response.token || response.data.token);
     window.dispatchEvent(new Event('user-logged-in'));
     router.push('/') // Redirect to home page after login
   } catch (err: any) {

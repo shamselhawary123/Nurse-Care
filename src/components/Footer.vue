@@ -19,7 +19,7 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-section logo">
-        <h2>Health_Care</h2>
+        <h2>Nurse_Care</h2>
         <div class="social-icons">
           <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
           <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
