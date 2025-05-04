@@ -14,7 +14,11 @@
       <h2 class="sidebar-title text-center">الاعدادات</h2>
       <ul class="sidebar-menu">
         <li class="active"><i class="fas fa-pen"></i> تعديل الملف الشخصي</li>
-        <li><i class="fas fa-bell"></i> الاشعارات</li>
+        <li>
+          <router-link to="/notifications" class="flex items-center">
+            <i class="fas fa-bell"></i> الاشعارات
+          </router-link>
+        </li>
         <li><i class="fas fa-lock"></i> الامان</li>
         <li><i class="fas fa-cog"></i> المظهر</li>
         <li><i class="fas fa-question-circle"></i> المساعدة</li>

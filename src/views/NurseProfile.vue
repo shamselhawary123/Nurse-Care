@@ -24,7 +24,10 @@
     _id: string;
     title: string;
     ratings: number;
-    user: { name: string };
+    user: { 
+      name: string;
+      personalPhoto: string;
+    };
     nurse: { firstName: string; lastName: string };
     createdAt: string;
   }
@@ -220,26 +223,35 @@
                 v-for="review in reviews"
                 :key="review._id"
                 class="review-card mb-4 p-4 bg-gray-50 rounded-lg shadow">
-                <div class="flex items-center mb-2">
-                  <span class="font-semibold text-primary ml-2">{{
-                    review.user?.name
-                  }}</span>
-                  <span class="stars ml-2">
-                    <i
-                      v-for="n in 5"
-                      :key="n"
-                      :class="[
-                        'fa-star',
-                        n <= review.ratings
-                          ? 'fas text-yellow-400'
-                          : 'far text-gray-300',
-                      ]"></i>
-                  </span>
-                  <span class="text-xs text-gray-400">{{
-                    new Date(review.createdAt).toLocaleDateString()
-                  }}</span>
+                <div class="flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <img 
+                      :src="review.user?.personalPhoto || '/default-avatar.png'"
+                      :alt="review.user?.name"
+                      class="w-12 h-12 rounded-full object-cover"
+                    />
+                  </div>
+                  <div class="flex-grow">
+                    <div class="flex items-center mb-2">
+                      <span class="font-semibold text-primary">{{ review.user?.name }}</span>
+                      <span class="stars ml-2">
+                        <i
+                          v-for="n in 5"
+                          :key="n"
+                          :class="[
+                            'fa-star',
+                            n <= review.ratings
+                              ? 'fas text-yellow-400'
+                              : 'far text-gray-300',
+                          ]"></i>
+                      </span>
+                      <span class="text-xs text-gray-400 ml-2">{{
+                        new Date(review.createdAt).toLocaleDateString()
+                      }}</span>
+                    </div>
+                    <div class="text-gray-700">{{ review.title }}</div>
+                  </div>
                 </div>
-                <div class="text-gray-700">{{ review.title }}</div>
               </div>
               <!-- Add Review Form -->
               <div
