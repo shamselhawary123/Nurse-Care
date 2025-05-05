@@ -97,7 +97,7 @@
       image: "/img/WhatsApp Image يي.jpg",
       rating: 4.9,
       totalRatings: 120,
-      location: "مدينة البوها : شارع الملك فيصل",
+      location: "مدينة ميت غمر ",
       fees: 250,
       waitingTime: "10 دقيقة",
       phone: "011",
@@ -110,7 +110,7 @@
       image: "/img/WhatsApp Image هه.jpg",
       rating: 5,
       totalRatings: 120,
-      location: "مدينة البوها : شارع الملك فيصل",
+            location: "مدينة البوها",
       fees: 250,
       waitingTime: "10 دقيقة",
       phone: "012",
@@ -229,7 +229,7 @@
         v-for="(service, index) in services.slice(0, 3)"
         :key="service.id"
         class="BookService-card">
-        <img :src="service.image" :alt="service.title" />
+        <img class="first-image" :src="service.image" :alt="service.title" />
         <div class="BookService-info">
           <h3>{{ service.title }}</h3>
           <p>{{ service.description }}</p>
@@ -258,9 +258,9 @@
                   ]">
                 </i>
               </div>
-              <span class="rating-text"
+              <!-- <span class="rating-text"
                 >{{ getTopRatedNurses()[index]?.totalRatings }} تقييم</span
-              >
+              > -->
             </div>
           </div>
         </div>
@@ -536,12 +536,13 @@
     transform: translateY(-5px);
   }
 
-  .BookService-card img {
+  .BookService-card .first-image {
     width: 150px;
-
+    /* width: 100px; */
+    /* height: 100px; */
     height: 100%;
     object-fit: cover;
-    border-radius: 10px 0 0 10px;
+    border-radius:10px;
   }
 
   .BookService-info {
@@ -585,9 +586,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    /* padding: 20px; */
     background-color: #ffffff;
-    border-radius: 50%;
+    border-radius: 10%;
+    /* border-radius: 50%; */
     width: 200px;
     height: 200px;
     box-shadow: 0 4px 15px rgba(0, 123, 143, 0.1);
@@ -605,13 +607,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    /* gap: 12px; */
     width: 100%;
   }
 
   .nurse-photo {
-    width: 100px;
-    height: 100px;
+    width: 115px;
+    height: 115px;
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid #007b8f;
@@ -628,13 +630,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    /* gap: 6px; */
     text-align: center;
   }
 
   .rating-info h3 {
     color: #007b8f;
-    font-size: 1.1rem;
+    /* font-size: 1.1rem; */
     font-weight: 600;
     margin: 0;
   }

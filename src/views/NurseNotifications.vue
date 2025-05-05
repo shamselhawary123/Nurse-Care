@@ -28,20 +28,11 @@ const fetchRequests = async () => {
   try {
     loading.value = true;
     const token = localStorage.getItem('token');
-   const role = localStorage.getItem('role');
-let url = '/api/v1/request/received';
-if (role === 'patient') {
-  url = '/api/v1/request/sent';
- } 
-const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
-
-
-
-
-
-
-    
-    requests.value = res.data.data;
+    const res = await axios.get('/api/v1/request/received', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    // Only show pending requests
+    requests.value = res.data.data.filter((req: Request) => req.status === 'Pending');
   } catch (err: any) {
     error.value = 'حدث خطأ أثناء جلب الطلبات';
   } finally {
@@ -69,13 +60,12 @@ let notificationSocket: any = null;
 
 onMounted(() => {
   fetchRequests();
-  // Connect to Socket.IO for real-time notifications
   const nurseId = localStorage.getItem('userId');
   notificationSocket = io('/notifications');
   if (nurseId) {
     notificationSocket.emit('join', nurseId);
     notificationSocket.on('new_request', (data: any) => {
-      toast.info(`طلب جديد من المريض: ${data.patientInfo.name}`);
+      toast.info(`طلب جديد من المريض: ${data.patientInfo.firstName} ${data.patientInfo.lastName}`);
       fetchRequests();
     });
   }
@@ -101,15 +91,10 @@ onUnmounted(() => {
       <div v-else>
         <div v-if="requests.length === 0" class="text-gray-500 text-center">لا توجد طلبات حالياً.</div>
         <div v-for="req in requests" :key="req._id" class="request-card bg-white rounded-lg shadow p-6 mb-6 flex items-center gap-6">
-          <img :src="req.patient.personalPhoto || '/default-avatar.png'" :alt="req.patient.firstName" class="w-16 h-16 rounded-full object-cover border" />
+          <img :src="req.patient.personalPhoto || '/default-avatar.png'" :alt="`${req.patient.firstName} ${req.patient.lastName}`" class="w-16 h-16 rounded-full object-cover border" />
           <div class="flex-1">
-              <div class="font-bold text-lg text-primary mb-2">{{ req.patient.firstName }}</div>
-              <textarea class="input-field" :value="req.description" readonly rows="2"></textarea>
-            <div class="status">
-              <span v-if="req.status === 'Pending'">قيد الانتظار</span>
-              <span v-else-if="req.status === 'Approved'">تم القبول</span>
-              <span v-else-if="req.status === 'Rejected'">تم الرفض</span>
-            </div>
+            <div class="font-bold text-lg text-primary mb-2">{{ req.patient.firstName }} {{ req.patient.lastName }}</div>
+            <textarea class="input-field" :value="req.description" readonly rows="2"></textarea>
           </div>
           <div class="flex flex-col gap-2">
             <button class="accept-btn" @click="handleAction(req._id, 'Approved')">قبول</button>
@@ -172,4 +157,4 @@ onUnmounted(() => {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-</style> 
+</style>

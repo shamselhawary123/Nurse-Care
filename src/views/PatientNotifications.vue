@@ -1,10 +1,10 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import { useToast } from 'vue-toastification';
 
-interface Patient {
+interface Nurse {
   _id: string;
   firstName: string;
   lastName: string;
@@ -13,7 +13,7 @@ interface Patient {
 
 interface Request {
   _id: string;
-  patient: Patient;
+  nurse: Nurse;
   description: string;
   status: string;
 }
@@ -28,19 +28,9 @@ const fetchRequests = async () => {
   try {
     loading.value = true;
     const token = localStorage.getItem('token');
-   const role = localStorage.getItem('role');
-let url = '/api/v1/request/received';
-if (role === 'patient') {
-  url = '/api/v1/request/sent';
- } 
-const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
-
-
-
-
-
-
-    
+    const res = await axios.get('/api/v1/request/sent', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     requests.value = res.data.data;
   } catch (err: any) {
     error.value = 'حدث خطأ أثناء جلب الطلبات';
@@ -49,33 +39,16 @@ const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` }
   }
 };
 
-const handleAction = async (requestId: string, action: 'Approved' | 'Rejected') => {
-  try {
-    const token = localStorage.getItem('token');
-    await axios.put(`/api/v1/request/${requestId}/${action}`, {}, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (action === 'Rejected') {
-      requests.value = requests.value.filter(req => req._id !== requestId);
-    } else {
-      fetchRequests();
-    }
-  } catch (err) {
-    alert('حدث خطأ أثناء تحديث الطلب');
-  }
-};
-
 let notificationSocket: any = null;
 
 onMounted(() => {
   fetchRequests();
-  // Connect to Socket.IO for real-time notifications
-  const nurseId = localStorage.getItem('userId');
+  const patientId = localStorage.getItem('userId');
   notificationSocket = io('/notifications');
-  if (nurseId) {
-    notificationSocket.emit('join', nurseId);
-    notificationSocket.on('new_request', (data: any) => {
-      toast.info(`طلب جديد من المريض: ${data.patientInfo.name}`);
+  if (patientId) {
+    notificationSocket.emit('join', patientId);
+    notificationSocket.on('request_rejected', (data: any) => {
+      toast.error(data.message);
       fetchRequests();
     });
   }
@@ -101,19 +74,17 @@ onUnmounted(() => {
       <div v-else>
         <div v-if="requests.length === 0" class="text-gray-500 text-center">لا توجد طلبات حالياً.</div>
         <div v-for="req in requests" :key="req._id" class="request-card bg-white rounded-lg shadow p-6 mb-6 flex items-center gap-6">
-          <img :src="req.patient.personalPhoto || '/default-avatar.png'" :alt="req.patient.firstName" class="w-16 h-16 rounded-full object-cover border" />
+          <img :src="req.nurse?.personalPhoto || '/default-avatar.png'" :alt="`${req.nurse?.firstName || ''} ${req.nurse?.lastName || ''}`" class="w-16 h-16 rounded-full object-cover border" />
           <div class="flex-1">
-              <div class="font-bold text-lg text-primary mb-2">{{ req.patient.firstName }}</div>
-              <textarea class="input-field" :value="req.description" readonly rows="2"></textarea>
+            <div class="font-bold text-lg text-primary mb-2">
+              {{ req.nurse ? req.nurse.firstName + ' ' + req.nurse.lastName : 'بدون ممرضة محددة' }}
+            </div>
+            <textarea class="input-field" :value="req.description" readonly rows="2"></textarea>
             <div class="status">
               <span v-if="req.status === 'Pending'">قيد الانتظار</span>
               <span v-else-if="req.status === 'Approved'">تم القبول</span>
               <span v-else-if="req.status === 'Rejected'">تم الرفض</span>
             </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <button class="accept-btn" @click="handleAction(req._id, 'Approved')">قبول</button>
-            <button class="reject-btn" @click="handleAction(req._id, 'Rejected')">رفض</button>
           </div>
         </div>
       </div>
@@ -138,28 +109,6 @@ onUnmounted(() => {
   background: #f9f9f9;
   resize: none;
 }
-.accept-btn {
-  background: #007b8f;
-  color: #fff;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: background 0.3s;
-}
-.accept-btn:hover {
-  background: #006272;
-}
-.reject-btn {
-  background: #f8d7da;
-  color: #c82333;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: background 0.3s;
-}
-.reject-btn:hover {
-  background: #f5c6cb;
-}
 .loading-spinner {
   width: 50px;
   height: 50px;
@@ -172,4 +121,4 @@ onUnmounted(() => {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-</style> 
+</style> -->

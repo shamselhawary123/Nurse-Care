@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import io, { Socket } from 'socket.io-client';
+import toast from 'vue-toastification';
 
 const router = useRouter();
 
@@ -99,6 +102,75 @@ const features = ref([
     icon: 'fa-solid fa-heart'
   }
 ]);
+
+interface Patient {
+  _id: string;
+  name: string;
+  personalPhoto: string;
+}
+
+interface Request {
+  _id: string;
+  patient: Patient;
+  description: string;
+  status: string;
+}
+
+const requests = ref<Request[]>([]);
+const loading = ref(true);
+const error = ref<string | null>(null);
+
+const fetchRequests = async () => {
+  try {
+    loading.value = true;
+    const token = localStorage.getItem('token');
+    const res = await axios.get('/api/v1/request/received', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    requests.value = res.data.data;
+  } catch (err: any) {
+    error.value = 'حدث خطأ أثناء جلب الطلبات';
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handleAction = async (requestId: string, action: 'accept' | 'reject') => {
+  try {
+    const token = localStorage.getItem('token');
+    await axios.put(`/api/v1/request/${requestId}/${action}`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (action === 'reject') {
+      requests.value = requests.value.filter((req) => req._id !== requestId);
+    } else {
+      fetchRequests();
+    }
+  } catch (err) {
+    alert('حدث خطأ أثناء تحديث الطلب');
+  }
+};
+
+let notificationSocket: Socket | null = null;
+
+onMounted(() => {
+  fetchRequests();
+  const userId = localStorage.getItem('userId');
+  notificationSocket = io('/notifications');
+  if (userId && notificationSocket) {
+    notificationSocket.emit('join', userId);
+    notificationSocket.on('request_rejected', (data: { requestId: string; message: string }) => {
+      toast.error(data.message);
+      // Optionally, update the UI to reflect the rejection
+    });
+  }
+});
+
+onUnmounted(() => {
+  if (notificationSocket) {
+    notificationSocket.disconnect();
+  }
+});
 </script>
 
 <template>
