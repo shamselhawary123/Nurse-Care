@@ -109,6 +109,7 @@
         <div class="form-actions">
           <button type="button" class="cancel-btn" @click="resetForm">الغاء</button>
           <button type="submit" class="save-btn">حفظ</button>
+          <button type="button" class="logout-btn" @click="handleLogout">تسجيل الخروج</button>
         </div>
       </form>
     </main>
@@ -334,6 +335,15 @@ const resetForm = () => {
   }
 };
 
+const handleLogout = () => {
+  // Clear local storage
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
+  
+  // Redirect to login page
+  router.push('/login');
+};
+
 // Watch for changes in user data
 watch(user, (newValue) => {
   console.log('User data changed:', newValue);
@@ -542,6 +552,19 @@ watch(form, (newValue) => {
 }
 .cancel-btn:hover {
   background: #fff7e6;
+}
+.logout-btn {
+  background: #dc3545;
+  color: #fff;
+  padding: 10px 32px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.logout-btn:hover {
+  background: #c82333;
 }
 .save-btn {
   background: #007b8f;

@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://health-care-eight-gamma.vercel.app/",
+        target: "https://health-care-sage-seven.vercel.app/",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, "/api"),

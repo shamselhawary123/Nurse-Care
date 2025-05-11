@@ -2,6 +2,13 @@
   import { ref, computed, onMounted, watchEffect } from "vue";
   import { useRouter } from "vue-router";
 
+  interface Notification {
+    _id: string;
+    message: string;
+    read: boolean;
+    // Add other fields if needed
+  }
+
   defineOptions({
     name: "Header",
   });
@@ -11,6 +18,9 @@
   const user = ref<any>(null);
   const isLoggedIn = ref(false);
   const isNavOpen = ref(false);
+  const notifications = ref<Notification[]>([]);
+  const unreadCount = ref(0);
+  const showDropdown = ref(false);
 
   const toggleDarkMode = () => {
     isDarkMode.value = !isDarkMode.value;
@@ -59,15 +69,51 @@
     isNavOpen.value = false;
   };
 
+  const fetchNotifications = async () => {
+    // Example: fetch notifications from your API
+    const token = localStorage.getItem("token");
+    const res = await fetch("/api/v1/notifications", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      notifications.value = data.notifications || [];
+      unreadCount.value = notifications.value.filter(n => !n.read).length;
+    }
+  };
+
+  const toggleDropdown = (e) => {
+    e.stopPropagation();
+    showDropdown.value = !showDropdown.value;
+  };
+
+  const openNotification = (notif) => {
+    // Mark as read (optional: send to backend)
+    notif.read = true;
+    unreadCount.value = notifications.value.filter(n => !n.read).length;
+    // Redirect to notifications page
+    router.push("/notifications");
+    showDropdown.value = false;
+  };
+
+  const goToNotifications = () => {
+    router.push("/notifications");
+    showDropdown.value = false;
+  };
+
   onMounted(() => {
     checkLogin();
     fetchUser();
+    fetchNotifications();
     window.addEventListener("storage", checkLogin);
     window.addEventListener("user-logged-in", () => {
       checkLogin();
       fetchUser();
     });
     console.log("Header mounted, isLoggedIn:", isLoggedIn.value);
+    document.addEventListener("click", () => {
+      showDropdown.value = false;
+    });
   });
 
   watchEffect(() => {
@@ -108,6 +154,31 @@
             title="إعدادات الحساب"
             style="font-size: 1.3rem; margin-right: 0.5rem"></i>
         </template>
+        <div class="notification-wrapper" @click="toggleDropdown">
+          <i
+            :class="[
+              'fa-solid',
+              'fa-bell',
+              'cursor-pointer',
+              unreadCount > 0 ? 'has-unread' : ''
+            ]"
+            title="الإشعارات"
+          ></i>
+          <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+          <div v-if="showDropdown" class="notification-dropdown">
+            <div v-if="notifications.length === 0" class="empty">لا توجد إشعارات جديدة</div>
+            <div
+              v-for="notif in notifications"
+              :key="notif._id"
+              class="notification-item"
+              :class="{ unread: !notif.read }"
+              @click="openNotification(notif)"
+            >
+              {{ notif.message }}
+            </div>
+            <div class="see-all" @click="goToNotifications">عرض كل الإشعارات</div>
+          </div>
+        </div>
         <i
           v-if="!isDarkMode"
           @click="toggleDarkMode"
@@ -299,5 +370,70 @@
   }
   .hamburger span.open:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .notification-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .fa-bell {
+    font-size: 1.4rem;
+    color: #000000e0;
+    transition: color 0.2s;
+  }
+  .fa-bell.has-unread {
+    color: #ff9800; /* Highlight color for new notifications */
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #ff9800;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    font-weight: bold;
+  }
+
+  .notification-dropdown {
+    position: absolute;
+    right: 0;
+    top: 2.2rem;
+    background: #fff;
+    min-width: 220px;
+    max-width: 320px;
+    box-shadow: 0 2px 8px #0002;
+    border-radius: 8px;
+    z-index: 2000;
+    padding: 0.5rem 0;
+    max-height: 350px;
+    overflow-y: auto;
+  }
+  .notification-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .notification-item.unread {
+    background: #f5faff;
+    font-weight: bold;
+  }
+  .notification-item:hover {
+    background: #f0f0f0;
+  }
+  .see-all {
+    text-align: center;
+    color: #007b8f;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-top: 1px solid #eee;
+  }
+  .empty {
+    text-align: center;
+    color: #888;
+    padding: 1rem 0;
   }
 </style>
