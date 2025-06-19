@@ -37,14 +37,14 @@ const submitBooking = async () => {
     const token = localStorage.getItem('token');
 
     if (!patientId || !token) {
-      alert('لازم تسجل دخول الأول');
+      alert('يجب تسجيل الدخول أولاً');
       router.push('/login');
       return;
     }
 
     const bookingData = {
-      patient: patientId,
-      nurse: route.params.id,
+      
+      nurseId: route.params.id,
       description: notes.value || 'حجز موعد مع الممرضة',
     };
 

@@ -59,7 +59,22 @@
               <span v-if="errors.lastName" class="text-red-500 text-xs mt-1">{{ errors.lastName }}</span>
             </div>
           </div>
-
+<div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="gender" class="block text-sm font-medium text-gray-700">النوع</label>
+              <select id="gender" v-model="gender" name="gender" required :class="{ 'border-red-500': errors.gender }" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                <option value="" disabled>اختر النوع</option>
+                <option value="male">ذكر</option>
+                <option value="female">أنثى</option>
+              </select>
+              <span v-if="errors.gender" class="text-red-500 text-xs mt-1">{{ errors.gender }}</span>
+            </div>
+            <div>
+              <label for="age" class="block text-sm font-medium text-gray-700">العمر</label>
+              <input id="age" v-model="age" name="age" type="number" min="1" required :class="{ 'border-red-500': errors.age }" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" placeholder="أدخل عمرك" />
+              <span v-if="errors.age" class="text-red-500 text-xs mt-1">{{ errors.age }}</span>
+            </div>
+          </div>
           <div>
             <label
               for="phoneNumber"
@@ -79,18 +94,39 @@
           </div>
 
           <div>
-            <label for="address" class="block text-sm font-medium text-gray-700"
-              >العنوان</label
-            >
-            <textarea
+            <label for="address" class="block text-sm font-medium text-gray-700">العنوان</label>
+            <select
               id="address"
               v-model="address"
               name="address"
-              :class="{ 'border-red-500': errors.address }"
               required
-              rows="3"
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-              placeholder="أدخل عنوانك"></textarea>
+              :class="{ 'border-red-500': errors.address }"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+              <option value="" disabled>اختر العنوان</option>
+              <option>قرية سنتماي</option>
+              <option>مدينة ميت غمر</option>
+              <option>المنصورة</option>
+              <option>مدينة أجا</option>
+              <option>مدينة طلخا</option>
+              <option>قرية الستاموني</option>
+              <option>قرية بلقاس</option>
+              <option>قرية بني عبيد</option>
+              <option>قرية تمي الأمديد</option>
+              <option>قرية الجمالية</option>
+              <option>قرية دكرنس</option>
+              <option>قرية سنبلاوين</option>
+              <option>قرية شربين</option>
+              <option>قرية محلة الدمنة</option>
+              <option>قرية المطرية</option>
+              <option>قرية المنزلة</option>
+              <option>قرية منية النصر</option>
+              <option>قرية ميت سلسيل</option>
+              <option>قرية ميت خميس</option>
+              <option>قرية نبروه</option>
+              <option>قرية البوها </option>
+
+
+            </select>
             <span v-if="errors.address" class="text-red-500 text-xs mt-1">{{ errors.address }}</span>
           </div>
 
@@ -146,6 +182,8 @@
               <span v-if="errors.confirmPassword" class="text-red-500 text-xs mt-1">{{ errors.confirmPassword }}</span>
             </div>
           </div>
+
+          
 
           <!-- Photo Upload Section -->
           <div class="space-y-6">
@@ -298,8 +336,10 @@ const schema = yup.object({
     .required('رقم الهاتف مطلوب')
     .matches(/^01[0-9]{9}$/, 'يجب أن يبدأ الرقم بـ 01 ويجب أن يكون مكون من 11 رقم فقط')
     .length(11, 'يجب أن يكون الرقم مكون من 11 رقم فقط'),
-  address: yup.string().required('العنوان مطلوب').min(3, 'العنوان يجب أن يكون على الأقل 3  أحرف'),
-  acceptTerms: yup.boolean().oneOf([true], 'يجب الموافقة على الشروط والأحكام')
+  address: yup.string().required('العنوان مطلوب'),
+  acceptTerms: yup.boolean().oneOf([true], 'يجب الموافقة على الشروط والأحكام'),
+  gender: yup.string().required('النوع مطلوب').oneOf(['male', 'female'], 'النوع غير صالح'),
+  age: yup.number().required('العمر مطلوب').min(1, 'العمر يجب أن يكون أكبر من 0'),
 });
 
 // Initialize form
@@ -316,6 +356,8 @@ const { value: confirmPassword } = useField('confirmPassword');
 const { value: phoneNumber } = useField('phoneNumber');
 const { value: address } = useField('address');
 const { value: acceptTerms } = useField('acceptTerms');
+const { value: gender } = useField<string>('gender');
+const { value: age } = useField<number>('age');
 
 const handlePhotoUpload = (event: Event, photoType: "personal" | "id") => {
   const input = event.target as HTMLInputElement;
@@ -346,12 +388,21 @@ const onSubmit = handleSubmit(async (values) => {
     isLoading.value = true;
     error.value = "";
 
-    const response = await signup({
-      ...values,
-      personalPhoto: personalPhoto.value || undefined,
-      idPhoto: idPhoto.value || undefined,
-      role: "patient",
-    });
+    const formData = new FormData();
+    formData.append('firstName', values.firstName);
+    formData.append('lastName', values.lastName);
+    formData.append('phoneNumber', values.phoneNumber);
+    formData.append('address', values.address);
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+    formData.append('confirmPassword', values.confirmPassword);
+    formData.append('gender', values.gender);
+    formData.append('age', values.age.toString());
+    formData.append('personalPhoto', personalPhoto.value || '');
+    formData.append('idPhoto', idPhoto.value || '');
+    formData.append('role', 'patient');
+
+    const response = await signup(formData);
 
     console.log("Signup successful:", response);
     router.push("/patient-login");

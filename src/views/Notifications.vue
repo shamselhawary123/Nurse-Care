@@ -11,9 +11,17 @@
     personalPhoto: string;
   }
 
+  interface Nurse {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    personalPhoto: string;
+  }
+
   interface Request {
     _id: string;
     patient: Patient;
+    nurse?: Nurse;
     description: string;
     status: string;
   }
@@ -23,12 +31,12 @@
   const error = ref<string | null>(null);
 
   const toast = useToast();
+  const role = localStorage.getItem('role');
 
   const fetchRequests = async () => {
     try {
       loading.value = true;
       const token = localStorage.getItem("token");
-      const role = localStorage.getItem("role");
       console.log("User role:", role);
       let url = "/api/v1/request/received";
       if (role === "patient") {
@@ -118,12 +126,14 @@
             pending: req.status === 'Pending',
           }">
           <img
-            :src="req.patient.personalPhoto || '/default-avatar.png'"
-            :alt="req.patient.firstName"
+            :src="role === 'patient' && req.nurse ? req.nurse.personalPhoto : req.patient.personalPhoto || '/default-avatar.png'"
+            :alt="role === 'patient' && req.nurse ? req.nurse.firstName : req.patient.firstName"
             class="w-16 h-16 rounded-full object-cover border" />
           <div class="flex-1">
             <div class="font-bold text-lg text-primary mb-2">
-              {{ req.patient.firstName }}
+              {{ role === 'patient' && req.nurse
+                  ? (req.nurse.firstName + ' ' + req.nurse.lastName)
+                  : (req.patient.firstName + ' ' + req.patient.lastName) }}
             </div>
             <textarea
               class="input-field"

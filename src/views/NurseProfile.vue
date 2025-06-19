@@ -18,6 +18,8 @@
     isActive: boolean;
     address: string;
     aboutMe: string | null;
+    gender?: string;
+    age?: number;
   }
 
   interface Review {
@@ -95,6 +97,28 @@
     isSubmitting.value = false;
   };
 
+  const reviewsCount = computed(() => reviews.value.length);
+
+  const overallRating = computed(() => {
+    if (!reviews.value.length) return 0;
+    const sum = reviews.value.reduce((acc, r) => acc + (r.ratings || 0), 0);
+    return (sum / reviews.value.length).toFixed(1); // 1 decimal
+  });
+
+  // If you want to use the same for clinic/assistant, or set static values:
+  const clinicRating = overallRating; // or: computed(() => 5)
+  const assistantRating = computed(() => {
+    // Example: 80% of reviews are 5, 20% are 4
+    if (!reviews.value.length) return 0;
+    // You can use a different logic if you want
+    return (reviews.value.filter(r => r.ratings >= 4).length / reviews.value.length * 5).toFixed(1);
+  });
+
+  // Helper to render stars
+  function renderStars(rating: number, max = 5) {
+    return Array.from({ length: max }, (_, i) => i < Math.round(rating));
+  }
+
   onMounted(() => {
     fetchNurseDetails();
     fetchReviews();
@@ -151,12 +175,16 @@
 
           <!-- Nurse Info -->
           <div class="flex-grow">
-            <h1 class="text-3xl font-bold text-primary mb-4">
+            <h1 class="text-3xl font-bold text-primary mb-2">
               {{ nurse.firstName }} {{ nurse.lastName }}
             </h1>
+            <div class="flex flex-wrap gap-4 items-center mb-4 text-gray-700 text-lg">
+              <span v-if="nurse.gender">النوع: {{ nurse.gender === 'male' ? 'ذكر' : nurse.gender === 'female' ? 'أنثى' : nurse.gender }}</span>
+              <span v-if="nurse.age">العمر: {{ nurse.age }} سنة</span>
+            </div>
 
             <div class="specialties mb-6">
-              <h2 class="text-xl font-semibold mb-2">التخصص:</h2>
+              <h2 class="text-xl font-semibold mb-2">التخصص<i class="fa-solid fa-stethoscope"></i>  </h2>
               <div class="flex flex-wrap gap-2">
                 <span v-if="nurse?.specialty?.name" class="specialization-tag">
                   {{ nurse.specialty.name || nurse.specialty._id }}
@@ -167,7 +195,7 @@
 
             <div class="aboutMe mb-6">
               <h2 class="text-xl font-semibold mb-2">
-                المعلومات الشخصية عن الممرض :
+              <i class="fa-solid fa-circle-info"></i>
               </h2>
               <p v-if="nurse?.aboutMe" class="text-gray-600 leading-relaxed">
                 {{ nurse.aboutMe }}
@@ -210,6 +238,46 @@
                 رجوع
                 <!-- <i class="fas fa-arrow-left ml-2"> </i> -->
               </button>
+            </div>
+            <!-- Separation Line -->
+            <hr class="border-t border-gray-200 my-4" />
+            <!-- General Evaluation Section -->
+            <div class="general-eval-box bg-gray-100 rounded-xl p-6 mb-10 flex flex-col md:flex-row items-center md:items-stretch gap-6 shadow-sm border-t-2 border-gray-200 mt-0" dir="rtl">
+              <!-- Title -->
+              <div class="w-full md:w-1/4 flex flex-col items-center md:items-start justify-between">
+                <div class="flex items-center justify-end w-full mb-4 md:mb-0">
+                  <span class="text-lg font-semibold text-gray-700 ml-2">تقييم المرضى </span>
+                  <i class="fa-regular fa-star-half-stroke" style="color: #007b8f;"></i>
+                </div>
+                <!-- Average Rating Box -->
+                <div class="mt-auto md:mt-0 flex md:block justify-center">
+                  <div class="bg-blue-500 text-white rounded-lg px-4 py-2 text-lg font-bold shadow text-center w-16" style="background-color: #007b8f;">{{ overallRating }}/5</div>
+                  <div class="text-xs text-gray-500 mt-1 text-center md:text-right w-full">تقييم الدكتور</div>
+                </div>
+              </div>
+              <!-- Main Rating -->
+              <div class="flex-1 flex flex-col items-center justify-center">
+                <div class="flex items-center justify-center mb-2">
+                  <i v-for="(filled, n) in renderStars(overallRating)" :key="n" :class="[filled ? 'fas' : 'far', 'fa-star', 'text-yellow-400', 'text-2xl', 'mx-1']"></i>
+                </div>
+                <div class="text-lg font-semibold text-gray-700 mb-1">التقييم العام</div>
+                <div class="text-sm text-gray-500">من {{ reviewsCount }} تقييمات المرضى</div>
+                <!-- Sub Ratings -->
+                <div class="flex flex-col md:flex-row gap-4 mt-6 w-full justify-center">
+                  <div class="flex flex-col items-center flex-1">
+                    <div class="flex items-center mb-1">
+                      <i v-for="(filled, n) in renderStars(clinicRating)" :key="'clinic'+n" :class="[filled ? 'fas' : 'far', 'fa-star', 'text-yellow-400', 'text-lg', 'mx-0.5']"></i>
+                    </div>
+                    <div class="text-sm text-gray-600">تقييم العيادة</div>
+                  </div>
+                  <div class="flex flex-col items-center flex-1">
+                    <div class="flex items-center mb-1">
+                      <i v-for="(filled, n) in renderStars(assistantRating)" :key="'assistant'+n" :class="[filled ? 'fas' : 'far', 'fa-star', 'text-yellow-400', 'text-lg', 'mx-0.5']"></i>
+                    </div>
+                    <div class="text-sm text-gray-600">تقييم المساعد</div>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- Reviews Section -->
             <div class="reviews-section mt-10">
@@ -325,6 +393,10 @@
     border-radius: 8px;
     font-weight: 500;
     transition: all 0.3s ease;
+  
+    margin-bottom: 25px;
+  
+
   }
 
   .request-btn {
@@ -361,6 +433,8 @@
     background-color: #f8f9fa;
     color: #6c757d;
     border: 1px solid #dee2e6;
+    margin-bottom: 25px;
+
   }
 
   .back-btn:hover {
@@ -376,6 +450,15 @@
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
+  .specialties i{
+    color:rgb(0 112 205 / var(--tw-text-opacity, 1));
+  }
+  .aboutMe i{
+        color:rgb(0 112 205 / var(--tw-text-opacity, 1));
+
+  }
+  
+
 
   @keyframes spin {
     0% {

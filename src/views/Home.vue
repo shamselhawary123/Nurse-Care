@@ -1,10 +1,13 @@
 <script setup lang="ts">
   import { ref, onMounted, onUnmounted } from "vue";
   import { useRouter } from "vue-router";
+  import { CountUp } from "countup.js";
 
   const router = useRouter();
   const currentSlide = ref(0);
   const maxSlides = ref(8); // Total number of slides
+  const statsRef = ref<HTMLElement | null>(null);
+  const statsVisible = ref(false);
 
   defineOptions({
     name: "Home",
@@ -110,7 +113,7 @@
       image: "/img/WhatsApp Image هه.jpg",
       rating: 5,
       totalRatings: 120,
-            location: "مدينة البوها",
+      location: "مدينة البوها",
       fees: 250,
       waitingTime: "10 دقيقة",
       phone: "012",
@@ -138,7 +141,73 @@
     };
   };
 
+  // Stats data
+  const stats = ref([
+    { value: 98, suffix: "%", label: "رضا العملاء", color: "bg-blue-500" },
+    { value: 15, suffix: "+", label: "سنة من الخبرة", color: "bg-green-500" },
+    { value: 500, suffix: "+", label: "ممرضون متاحون", color: "bg-purple-500" },
+    {
+      value: 10000,
+      suffix: "+",
+      label: "منازل تم خدمتهم",
+      color: "bg-orange-500",
+    },
+  ]);
+
+  // Get icon for each stat
+  const getStatIcon = (label: string): string => {
+    switch (label) {
+      case "رضا العملاء":
+        return "fa-smile";
+      case "سنة من الخبرة":
+        return "fa-clock";
+      case "مرضوض متاحون":
+        return "fa-user-nurse";
+      case "منازل تم خدمتهم":
+        return "fa-home";
+      default:
+        return "fa-chart-bar";
+    }
+  };
+
+  // Initialize CountUp instances when stats become visible
+  const initCounters = () => {
+    if (!statsRef.value) return;
+
+    const counters = stats.value.map((stat) => {
+      const element = document.getElementById(`counter-${stat.label}`);
+      if (!element) return null;
+
+      return new CountUp(element, stat.value, {
+        suffix: stat.suffix,
+        duration: 2.5,
+        enableScrollSpy: true,
+        scrollSpyOnce: true,
+      });
+    });
+
+    counters.forEach((counter) => counter?.start());
+  };
+
+  // Intersection Observer setup
   onMounted(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            statsVisible.value = true;
+            initCounters();
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (statsRef.value) {
+      observer.observe(statsRef.value);
+    }
+
     // Start the automatic slideshow
     const slideInterval = setInterval(() => {
       nextSlide();
@@ -147,6 +216,7 @@
     // Clean up on component unmount
     onUnmounted(() => {
       clearInterval(slideInterval);
+      observer.disconnect();
     });
   });
 
@@ -168,13 +238,9 @@
   <div class="maincont">
     <section class="hero">
       <div class="hero-image">
-        <!-- <img src="/img/content.png" alt="ممرضة ترعى سيدة مسنة" /> -->
-        <!-- <img src="/img/home1.png" alt="ممرضة ترعى سيدة مسنة" /> -->
         <img src="/img/Nurs home.png" alt="مرحبا بكم في NursCare" />
-        <!-- <img src="/img/hh.png" alt="ممرضة ترعى سيدة مسنة" /> -->
       </div>
     </section>
-
     <section class="services">
       <h2 class="section-title">خدماتنا المتميزة</h2>
 
@@ -182,7 +248,6 @@
         <button class="nav-button prev" @click="prevSlide">
           <i class="fas fa-chevron-left"></i>
         </button>
-
         <div class="services-slider">
           <div
             class="slides-wrapper"
@@ -298,24 +363,39 @@
       </form>
     </div>
 
-    <section class="stats-container">
-      <h2 class="stats-title">تقيمنا</h2>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <h3>10,000+</h3>
-          <p>منازل تم خدمتهم</p>
-        </div>
-        <div class="stat-item">
-          <h3>500+</h3>
-          <p>مرضوض متاحون</p>
-        </div>
-        <div class="stat-item">
-          <h3>15+</h3>
-          <p>سنة من الخبرة</p>
-        </div>
-        <div class="stat-item">
-          <h3>98%</h3>
-          <p>رضا العملاء</p>
+    <section
+      ref="statsRef"
+      class="stats-section py-16 bg-gradient-to-b from-white to-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">
+          إحصائياتنا
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div
+            v-for="stat in stats"
+            :key="stat.label"
+            class="stat-card transform transition-all duration-300 hover:scale-105">
+            <div class="p-6 rounded-xl bg-white shadow-lg">
+              <div class="flex items-center justify-center mb-4">
+                <div
+                  :class="[
+                    stat.color,
+                    'w-16 h-16 rounded-full flex items-center justify-center',
+                  ]">
+                  <span class="text-2xl text-white">
+                    <i :class="getStatIcon(stat.label)" class="fas"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-4xl font-bold text-gray-800 mb-2">
+                  <span :id="'counter-' + stat.label">0</span>
+                </div>
+                <p class="text-gray-600">{{ stat.label }}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -542,7 +622,7 @@
     /* height: 100px; */
     height: 100%;
     object-fit: cover;
-    border-radius:10px;
+    border-radius: 10px;
   }
 
   .BookService-info {
@@ -742,35 +822,18 @@
   }
 
   /* Stats Section */
-  .stats-container {
-    padding: 4rem 2rem;
-    background-color: white;
+  .stats-section {
+    direction: rtl;
   }
 
-  .stats-title {
-    text-align: center;
-    color: var(--primary-color);
-    margin-bottom: 3rem;
+  .stat-card {
+    transition: all 0.3s ease;
   }
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    text-align: center;
+  .stat-card:hover {
+    transform: translateY(-5px);
   }
 
-  .stat-item h3 {
-    color: var(--primary-color);
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .stat-item p {
-    color: #666;
-  }
-
-  /* Responsive Design */
   @media (max-width: 768px) {
     .contact-container {
       width: 90%;
@@ -784,8 +847,8 @@
       width: 100%;
     }
 
-    .stats-grid {
-      grid-template-columns: 1fr;
+    .stats-section {
+      padding: 3rem 1rem;
     }
 
     .slider-container {

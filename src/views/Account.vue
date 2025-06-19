@@ -69,6 +69,16 @@
             <input v-model="form.lastName" type="text" />
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>النوع</label>
+            <input :value="form.gender === 'male' ? 'ذكر' : form.gender === 'female' ? 'أنثى' : form.gender" type="text" disabled />
+          </div>
+          <div class="form-group">
+            <label>العمر</label>
+            <input :value="form.age ? form.age + ' سنة' : ''" type="text" disabled />
+          </div>
+        </div>
         <div class="form-group">
           <label>رقم الجوال</label>
           <input v-model="form.phoneNumber" type="text" />
@@ -181,7 +191,9 @@ const initializeForm = (userData: any) => {
     address: userData.address || '',
     aboutMe: userData.aboutMe || '',
     role: userData.role || '',
-    personalPhoto: userData.personalPhoto || null
+    personalPhoto: userData.personalPhoto || null,
+    gender: userData.gender || '',
+    age: userData.age || '',
   };
   
   if (userData.personalPhoto) {

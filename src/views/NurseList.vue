@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, onMounted } from "vue";
+  import { ref, onMounted, watch } from "vue";
   import axios from "axios";
 
   interface Nurse {
@@ -20,31 +20,33 @@
     }>;
     isActive: boolean;
     address: string;
+    averageRating?: number;
+    reviewsCount?: number;
   }
 
   const nurses = ref<Nurse[]>([]);
   const loading = ref(true);
   const error = ref<string | null>(null);
+  const currentPage = ref(1);
+  const totalPages = ref(1);
+  const totalNurses = ref(0);
+  const limit = 6;
 
+  // Fetch nurses with pagination and sorting
   const fetchNurses = async () => {
     try {
       loading.value = true;
-      const response = await axios.get("/api/v1/users/nurses");
-
+      error.value = null;
+      let url = `/api/v1/users/nurses?page=${currentPage.value}&limit=${limit}`;
+      // For the first page, sort by averageRating desc
+      if (currentPage.value === 1) {
+        url += `&sort=-averageRating`;
+      }
+      const response = await axios.get(url);
       if (response.data.status === "success") {
-        nurses.value = response.data.data.map((nurse: any) => ({
-          _id: nurse._id,
-          firstName: nurse.firstName || "",
-          lastName: nurse.lastName || "",
-          email: nurse.email || "",
-          phoneNumber: nurse.phoneNumber || "غير متوفر",
-          personalPhoto: nurse.personalPhoto || "/img/default-nurse.png",
-          role: nurse.role || "nurse",
-          departmentId: nurse.departmentId || { name: "غير محدد", _id: "" },
-          specialties: nurse.specialties || [],
-          isActive: nurse.isActive || false,
-          address: nurse.address || "غير محدد",
-        }));
+        nurses.value = response.data.data;
+        totalNurses.value = response.data.total || 0;
+        totalPages.value = Math.ceil(totalNurses.value / limit);
       }
     } catch (err: any) {
       console.error("Error fetching nurses:", err);
@@ -53,6 +55,21 @@
       loading.value = false;
     }
   };
+
+  // Handle page change
+  const goToPage = (page: number) => {
+    if (page < 1 || page > totalPages.value) return;
+    currentPage.value = page;
+  };
+
+  // Watch for page changes
+  watch(currentPage, () => {
+    fetchNurses();
+  });
+
+  onMounted(() => {
+    fetchNurses();
+  });
 
   const sendRequest = async (nurseId: string) => {
     try {
@@ -69,10 +86,6 @@
       .fill(0)
       .map((_, index) => index < Math.floor(rating));
   };
-
-  onMounted(() => {
-    fetchNurses();
-  });
 </script>
 
 <template>
@@ -121,13 +134,16 @@
                   <h2 class="text-2xl font-bold text-primary mb-2">
                     {{ nurse.firstName }} {{ nurse.lastName }}
                   </h2>
+                  
                   <div class="specialization mb-2">
-                    <span
+                  <span
+                  
                       v-for="(spec, index) in nurse.specialties"
                       :key="index"
                       class="specialization-tag">
                       {{ spec.name }}
                     </span>
+                    <i class="fa-solid fa-stethoscope"></i>  
                     <span
                       v-if="nurse.departmentId?.name"
                       class="specialization-tag">
@@ -161,19 +177,43 @@
             <!-- Action Buttons -->
             <div class="flex flex-col gap-3">
               <button
-                @click="sendRequest(nurse._id)"
+                @click.stop="sendRequest(nurse._id)"
                 class="request-btn"
                 :disabled="!nurse.isActive">
                 <i class="fas fa-paper-plane ml-2"></i>
                 {{ nurse.isActive ? "إرسال طلب" : "غير متاح" }}
               </button>
-              <a :href="'tel:' + nurse.phoneNumber" class="call-btn">
+              <a :href="'tel:' + nurse.phoneNumber" class="call-btn" @click.stop>
                 <i class="fas fa-phone-alt ml-2"></i>
                 اتصال
               </a>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Pagination Bar -->
+      <div v-if="totalPages > 1" class="pagination-bar flex flex-wrap justify-center items-center mt-10 gap-2">
+        <button
+          v-for="page in Math.min(totalPages, 7)"
+          :key="page"
+          :class="['pagination-btn', { active: currentPage === page }]"
+          @click="goToPage(page)">
+          {{ page }}
+        </button>
+        <span v-if="totalPages > 7 && currentPage < totalPages - 3">...</span>
+        <button
+          v-if="totalPages > 7 && currentPage < totalPages - 3"
+          class="pagination-btn"
+          @click="goToPage(totalPages)">
+          {{ totalPages }}
+        </button>
+        <button
+          class="pagination-btn next"
+          :disabled="currentPage === totalPages"
+          @click="goToPage(currentPage + 1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -217,7 +257,9 @@
     margin-left: 8px;
     font-size: 0.9rem;
   }
-
+  .specialization i{
+    color: #007b8f;
+  }
   .details-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -298,5 +340,49 @@
   .request-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+  }
+
+  .pagination-bar {
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+  .pagination-btn {
+    background: white;
+    border: 1px solid #e5e7eb;
+    color: #007b8f;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-weight: 500;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .pagination-btn.active {
+    background: #007b8f;
+    color: white;
+    border-color: #007b8f;
+  }
+  .pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .pagination-btn.next {
+    border-radius: 50%;
+    font-size: 1.2rem;
+  }
+  @media (max-width: 600px) {
+    .pagination-bar {
+      gap: 0.25rem;
+    }
+    .pagination-btn {
+      width: 32px;
+      height: 32px;
+      font-size: 1rem;
+    }
   }
 </style>

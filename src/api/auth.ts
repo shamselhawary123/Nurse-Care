@@ -102,69 +102,39 @@ export const login = async (credentials: LoginCredentials) => {
   }
 };
 
-export const signup = async (data: SignUpData) => {
-  console.log("🚀 ~ signup ~ data:", data);
+export const signup = async (data: FormData) => {
   try {
-    const endpoint =
-      data.role === "patient" ? "/auth/patientSignup" : "/auth/nurseSignup";
-
-    const formData = new FormData();
-    formData.append("firstName", data.firstName);
-    formData.append("lastName", data.lastName);
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-    formData.append("confirmPassword", data.confirmPassword);
-    formData.append("phoneNumber", data.phoneNumber);
-    formData.append("address", data.address);
-    formData.append("role", data.role);
-
-    if (data.personalPhoto instanceof File) {
-      formData.append("personalPhoto", data.personalPhoto);
-    }
-    if (data.businessCardPhoto instanceof File) {
-      formData.append("businessCardPhoto", data.businessCardPhoto);
-    }
-    if (data.idPhoto instanceof File) {
-      formData.append("idPhoto", data.idPhoto);
-    }
-
-    const response = await api.post(endpoint, formData, {
+    const endpoint = data.get('role') === 'patient' ? '/auth/patientSignup' : '/auth/nurseSignup';
+    const response = await api.post(endpoint, data, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       timeout: 60000,
     });
-
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      console.error("Upload error details:", {
+      console.error('Upload error details:', {
         status: error.response?.status,
         data: error.response?.data,
         headers: error.response?.headers,
       });
-
-      if (error.code === "ECONNABORTED") {
-        throw new Error("Request timeout - please try again");
+      if (error.code === 'ECONNABORTED') {
+        throw new Error('Request timeout - please try again');
       }
-
       if (!error.response) {
-        throw new Error("Network error - please check your connection");
+        throw new Error('Network error - please check your connection');
       }
-
       const serverMessage =
         error.response.data?.message ||
         error.response.data?.error ||
-        "Registration failed";
-
+        'Registration failed';
       throw new Error(serverMessage);
     }
-
     if (error instanceof Error) {
       throw error;
     }
-
-    throw new Error("An unknown error occurred during signup");
+    throw new Error('An unknown error occurred during signup');
   }
 };
 

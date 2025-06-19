@@ -59,7 +59,22 @@
               <span v-if="errors.lastName" class="text-red-500 text-xs mt-1">{{ errors.lastName }}</span>
             </div>
           </div>
-
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="gender" class="block text-sm font-medium text-gray-700">النوع</label>
+              <select id="gender" v-model="gender" name="gender" required :class="{ 'border-red-500': errors.gender }" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                <option value="" disabled>اختر النوع</option>
+                <option value="male">ذكر</option>
+                <option value="female">أنثى</option>
+              </select>
+              <span v-if="errors.gender" class="text-red-500 text-xs mt-1">{{ errors.gender }}</span>
+            </div>
+            <div>
+              <label for="age" class="block text-sm font-medium text-gray-700">العمر</label>
+              <input id="age" v-model="age" name="age" type="number" min="1" required :class="{ 'border-red-500': errors.age }" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" placeholder="أدخل عمرك" />
+              <span v-if="errors.age" class="text-red-500 text-xs mt-1">{{ errors.age }}</span>
+            </div>
+          </div>
           <div>
             <label
               for="phoneNumber"
@@ -79,18 +94,37 @@
           </div>
 
           <div>
-            <label for="address" class="block text-sm font-medium text-gray-700"
-              >العنوان</label
-            >
-            <textarea
+            <label for="address" class="block text-sm font-medium text-gray-700">العنوان</label>
+            <select
               id="address"
               v-model="address"
               name="address"
-              :class="{ 'border-red-500': errors.address }"
               required
-              rows="3"
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-              placeholder="أدخل عنوانك"></textarea>
+              :class="{ 'border-red-500': errors.address }"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+              <option value="" disabled>اختر العنوان</option>
+              <option>قرية سنتماي</option>
+              <option>مدينة ميت غمر</option>
+              <option>المنصورة</option>
+              <option>مدينة أجا</option>
+              <option>مدينة طلخا</option>
+              <option>قرية الستاموني</option>
+              <option>قرية بلقاس</option>
+              <option>قرية بني عبيد</option>
+              <option>قرية تمي الأمديد</option>
+              <option>قرية الجمالية</option>
+              <option>قرية دكرنس</option>
+              <option>قرية سنبلاوين</option>
+              <option>قرية شربين</option>
+              <option>قرية محلة الدمنة</option>
+              <option>قرية المطرية</option>
+              <option>قرية المنزلة</option>
+              <option>قرية منية النصر</option>
+              <option>قرية ميت سلسيل</option>
+              <option>قرية ميت خميس</option>
+              <option>قرية نبروه</option>
+              <option>قرية البوها </option>
+            </select>
             <span v-if="errors.address" class="text-red-500 text-xs mt-1">{{ errors.address }}</span>
           </div>
 
@@ -108,7 +142,7 @@
               required
               :disabled="loadingSpecialties"
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm text-right">
-              <option value="" disabled selected>
+              <option value="" disabled>
                 {{
                   loadingSpecialties ? 'جاري تحميل التخصصات...' : 'اختر تخصصك'
                 }}
@@ -200,6 +234,8 @@
               <span v-if="errors.confirmPassword" class="text-red-500 text-xs mt-1">{{ errors.confirmPassword }}</span>
             </div>
           </div>
+
+
 
           <!-- Photo Upload Section -->
           <div class="space-y-6">
@@ -372,6 +408,8 @@ interface SignUpData {
   personalPhoto?: File;
   businessCardPhoto?: File;
   idPhoto?: File;
+  gender: string;
+  age: number;
 }
 
 const router = useRouter();
@@ -419,13 +457,12 @@ const schema = yup.object({
       'يجب أن يبدأ الرقم بـ 01 ويجب أن يكون مكون من 11 رقم فقط'
     )
     .length(11, 'يجب أن يكون الرقم مكون من 11 رقم فقط'),
-  address: yup
-    .string()
-    .required('العنوان مطلوب')
-    .min(3, 'العنوان يجب أن يكون على الأقل 3 أحرف'),
+  address: yup.string().required('العنوان مطلوب'),
   specialty: yup.string().required('التخصص مطلوب'),
   description: yup.string(),
   acceptTerms: yup.boolean().oneOf([true], 'يجب الموافقة على الشروط والأحكام'),
+  gender: yup.string().required('النوع مطلوب').oneOf(['male', 'female'], 'النوع غير صالح'),
+  age: yup.number().required('العمر مطلوب').min(1, 'العمر يجب أن يكون أكبر من 0'),
 });
 
 // Initialize form
@@ -444,6 +481,8 @@ const { value: address } = useField<string>('address');
 const { value: specialty } = useField<string>('specialty');
 const { value: description } = useField<string>('description');
 const { value: acceptTerms } = useField<boolean>('acceptTerms');
+const { value: gender } = useField<string>('gender');
+const { value: age } = useField<number>('age');
 
 // Fetch specialties on component mount
 onMounted(async () => {
@@ -496,25 +535,28 @@ const onSubmit = handleSubmit(async (values) => {
     isLoading.value = true;
     error.value = '';
 
-    const signupData: SignUpData = {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      password: values.password,
-      confirmPassword: values.confirmPassword,
-      phoneNumber: values.phoneNumber,
-      address: values.address,
-      specialty: values.specialty,
-      description: values.description || '',
-      role: 'nurse',
-      personalPhoto: personalPhoto.value || undefined,
-      businessCardPhoto: businessCardPhoto.value || undefined,
-      idPhoto: idPhoto.value || undefined,
-    };
+    const formData = new FormData();
+    formData.append('firstName', values.firstName);
+    formData.append('lastName', values.lastName);
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+    formData.append('confirmPassword', values.confirmPassword);
+    formData.append('phoneNumber', values.phoneNumber);
+    formData.append('address', values.address);
+    formData.append('role', 'nurse');
+    formData.append('specialty', values.specialty);
+    formData.append('description', values.description || '');
+    formData.append('acceptTerms', values.acceptTerms.toString());
+    formData.append('gender', values.gender);
+    formData.append('age', values.age.toString());
 
-    console.log('Signup data:', signupData); // Debug log
+    if (personalPhoto.value) formData.append('personalPhoto', personalPhoto.value);
+    if (businessCardPhoto.value) formData.append('businessCardPhoto', businessCardPhoto.value);
+    if (idPhoto.value) formData.append('idPhoto', idPhoto.value);
 
-    const response = await signup(signupData);
+    console.log('Signup data:', formData); // Debug log
+
+    const response = await signup(formData);
 
     console.log('Signup successful:', response);
 
