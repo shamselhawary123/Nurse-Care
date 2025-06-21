@@ -2,12 +2,18 @@
   import { ref, onMounted, onUnmounted } from "vue";
   import { useRouter } from "vue-router";
   import { CountUp } from "countup.js";
+  import { Swiper, SwiperSlide } from 'swiper/vue';
+  import { Autoplay, EffectFade } from 'swiper/modules';
+  import 'swiper/css';
+  import 'swiper/css/effect-fade';
 
   const router = useRouter();
   const currentSlide = ref(0);
   const maxSlides = ref(8); // Total number of slides
   const statsRef = ref<HTMLElement | null>(null);
   const statsVisible = ref(false);
+  const audio = ref<HTMLAudioElement | null>(null);
+  const audioPlayed = ref(false);
 
   defineOptions({
     name: "Home",
@@ -189,6 +195,43 @@
     counters.forEach((counter) => counter?.start());
   };
 
+  // --- Audio Playback Logic ---
+  const playAudio = async () => {
+    if (audio.value && !audioPlayed.value) {
+      try {
+        await audio.value.play();
+        audioPlayed.value = true;
+        removeInteractionListeners(); // Clean up listeners if autoplay is successful
+      } catch (error) {
+        console.warn(
+          "Audio autoplay was blocked by the browser. Waiting for user interaction."
+        );
+        // If autoplay fails, set up listeners for the first user interaction
+        addInteractionListeners();
+      }
+    }
+  };
+
+  const handleFirstInteraction = () => {
+    if (audio.value && !audioPlayed.value) {
+      playAudio();
+    }
+  };
+
+  const addInteractionListeners = () => {
+    window.addEventListener("click", handleFirstInteraction, { once: true });
+    window.addEventListener("scroll", handleFirstInteraction, { once: true });
+    window.addEventListener("keydown", handleFirstInteraction, { once: true });
+  };
+
+  const removeInteractionListeners = () => {
+    window.removeEventListener("click", handleFirstInteraction);
+    window.removeEventListener("scroll", handleFirstInteraction);
+    window.removeEventListener("keydown", handleFirstInteraction);
+  };
+
+  let audioTimeout: number;
+
   // Intersection Observer setup
   onMounted(() => {
     const observer = new IntersectionObserver(
@@ -213,10 +256,28 @@
       nextSlide();
     }, 5000);
 
+    // --- Audio Setup ---
+    // Note: Please create an `/public/audio/` directory and add your audio file.
+    // I am using 'background-music.mp3' as a placeholder.
+    audio.value = new Audio("/audio/the best.mp3");
+    audio.value.volume = 0.35; // Set a low volume
+    audio.value.loop = false; // Play only once
+
+    // Wait 3 seconds before trying to play the audio
+    audioTimeout = window.setTimeout(playAudio, 3000);
+
     // Clean up on component unmount
     onUnmounted(() => {
       clearInterval(slideInterval);
       observer.disconnect();
+
+      // Audio cleanup
+      clearTimeout(audioTimeout);
+      if (audio.value) {
+        audio.value.pause();
+        audio.value.src = ""; // Release the audio resource
+      }
+      removeInteractionListeners(); // Clean up any interaction listeners
     });
   });
 
@@ -232,17 +293,112 @@
   const goToSlide = (index: number) => {
     currentSlide.value = index;
   };
+
+  const heroSlides = ref([
+    {
+      img: '/img/7g.jpg',
+      title: 'رعاية صحية منزلية عالية الجودة',
+      subtitle: 'نحن نقدم رعاية رحيمة وموثوقة في راحة منزلك.'
+    },
+    {
+      img: '/img/hero5.jpg',
+      title: 'ممرضون متخصصون في خدمتكم',
+      subtitle: 'فريقنا من المهنيين المؤهلين متاح على مدار الساعة.'
+    },
+    {
+      img: '/img/hero4.jpg',
+      title: 'راحة البال لك ولأحبائك',
+      subtitle: 'نضمن سلامة ورفاهية عملائنا فوق كل شيء.'
+    },
+    {
+      img: '/img/hero1.jpg',
+      title: 'راحة البال لك ولأحبائك',
+      subtitle: 'نضمن سلامة ورفاهية عملائنا فوق كل شيء.'
+    }
+  ]);
+
+  const featureCards = ref([
+    {
+      icon: 'fa-solid fa-users',
+      title: 'طاقم طبي متكامل',
+      description: 'تمتلك Nurs care أفضل الكوادر ذوي الخبرة والكفاءة من الجنسين، سواء أطباء أو تمريض أو أخصائي علاج طبيعي بالمنزل.',
+      link: '#'
+    },
+    {
+      icon: 'fa-solid fa-map-marked-alt',
+      title: 'تغطية جغرافية واسعة',
+      description: 'Nurs care لديها العديد من الممرضين والأخصائيين والأطباء المتمركزين في معظم محافظات مصر.',
+      link: '#'
+    },
+    {
+      icon: 'fa-solid fa-briefcase-medical',
+      title: 'معدات طبية بالمنزل',
+      description: 'توفر Nurs care أحدث الأجهزة والمعدات الطبية في المنزل، والتعامل معها من خلال كوادر مُدرّبة على أعلى مستوى.',
+      link: '#'
+    },
+    {
+      icon: 'fa-solid fa-hand-holding-dollar',
+      title: 'أنسب أسعار في مصر',
+      description: 'تقدم Nurs care كير أفضل الأسعار في مصر على جميع خدمات الرعاية الطبية المنزلية بما يتناسب مع كل حالة واحتياجاتها.',
+      link: '#'
+    }
+  ]);
+
+  const swiperModules = [Autoplay, EffectFade];
 </script>
 
 <template>
   <div class="maincont">
-    <section class="hero">
-      <div class="hero-image">
-        <img src="/img/Nurs home.png" alt="مرحبا بكم في NursCare" />
+    <section class="hero-container relative">
+      <swiper
+        :modules="swiperModules"
+        :slides-per-view="1"
+        :loop="true"
+        :effect="'fade'"
+        :autoplay="{
+          delay: 5000,
+          disableOnInteraction: false,
+        }"
+        class="hero-slider"
+      >
+        <swiper-slide v-for="(slide, index) in heroSlides" :key="index">
+          <div class="slide-background" :style="{ backgroundImage: `url(${slide.img})` }"></div>
+          <div class="slide-overlay"></div>
+          <div class="slide-content" data-aos="fade-in">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">{{ slide.title }}</h1>
+            <p class="text-lg md:text-2xl max-w-3xl " style="color: white;">{{ slide.subtitle }}</p>
+          </div>
+        </swiper-slide>
+      </swiper>
+
+      <!-- Overlapping Feature Cards -->
+      <div class="relative container mx-auto px-4">
+        <div class="features-grid-container">
+          <div
+            v-for="(card, index) in featureCards"
+            :key="index"
+            class="feature-card"
+            data-aos="fade-up"
+            :data-aos-delay="100 * index"
+          >
+            <div>
+              <div class="card-icon">
+                <i :class="card.icon"></i>
+              </div>
+              <h3 class="card-title">{{ card.title }}</h3>
+              <p class="card-description">{{ card.description }}</p>
+            </div>
+            <button class="card-link" @click="router.push('/contact')">
+              تواصل معنا
+              <i class="fas fa-chevron-left mr-2"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
-    <section class="services">
-      <h2 class="section-title">خدماتنا المتميزة</h2>
+
+    <section class="services" data-aos="fade-up">
+      <h2 class="section-title" data-aos="fade-up">خدماتنا المتميزة</h2>
 
       <div class="slider-container">
         <button class="nav-button prev" @click="prevSlide">
@@ -255,9 +411,11 @@
               transform: `translateX(${currentSlide * 12.5}%)`,
             }">
             <div
-              v-for="service in services"
+              v-for="(service, index) in services"
               :key="service.id"
-              class="service-slide">
+              class="service-slide"
+              data-aos="fade-up" :data-aos-delay="100 * index"
+              >
               <div class="service-content" @click="router.push(service.link)">
                 <div class="service-image">
                   <img :src="service.image" :alt="service.title" />
@@ -293,7 +451,9 @@
       <div
         v-for="(service, index) in services.slice(0, 3)"
         :key="service.id"
-        class="BookService-card">
+        class="BookService-card"
+        data-aos="fade-up" :data-aos-delay="100 * index"
+        >
         <img class="first-image" :src="service.image" :alt="service.title" />
         <div class="BookService-info">
           <h3>{{ service.title }}</h3>
@@ -332,7 +492,17 @@
       </div>
     </div>
 
-    <div class="contact-container">
+    <!-- Video Section -->
+    <div class="video-wrapper" data-aos="fade-up">
+      <video
+        src="/videos/test.mp4"
+        controls
+        poster=""
+        style="width: 100%; border-radius: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1);"
+      ></video>
+    </div>
+
+    <div class="contact-container" data-aos="fade-up">
       <div class="text">
         <h2>تحتاج إلى مساعدة؟ نحن هنا للمساعدة</h2>
         <p>اتصل بنا عبر الهاتف أو البريد الإلكتروني أو واتساب لأي استفسارات.</p>
@@ -367,15 +537,17 @@
       ref="statsRef"
       class="stats-section py-16 bg-gradient-to-b from-white to-gray-50">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12" data-aos="fade-up">
           إحصائياتنا
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div
-            v-for="stat in stats"
+            v-for="(stat, index) in stats"
             :key="stat.label"
-            class="stat-card transform transition-all duration-300 hover:scale-105">
+            class="stat-card transform transition-all duration-300 hover:scale-105"
+            data-aos="fade-up" :data-aos-delay="100 * (index+1)"
+            >
             <div class="p-6 rounded-xl bg-white shadow-lg">
               <div class="flex items-center justify-center mb-4">
                 <div
@@ -416,25 +588,132 @@
   }
 
   /* Hero Section */
-  .hero {
+  .hero-container {
+    height: 100vh;
+    max-height: 800px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-slider {
+    height: 100%;
+  }
+
+  .slide-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .slide-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .slide-content {
+    position: relative;
+    z-index: 10;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    height: 100%;
     text-align: center;
-    /* padding: 100px 20px 50px 20px; */
-    padding-top: 40px;
+    color: white;
+    padding: 1rem;
   }
 
-  .hero-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
+  .slide-content h1,
+  .slide-content p {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
   }
 
-  /* Services Section */
+  /* Overlapping Feature Cards */
+  .features-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    width: 90%;
+    max-width: 1200px;
+    z-index: 20;
+  }
+  .features-grid-container .feature-card:hover {
+    transform: translateY(-160px);
+    box-shadow: 0 6px 20px rgba(0, 123, 143, 0.15);
+  
+  }
+
+  .feature-card {
+    background: linear-gradient(145deg, #007b8f, #005f6b);
+    color: white;
+    border-radius: 0.75rem;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-icon {
+    font-size: 3.5rem;
+    color: white;
+    margin-bottom: 1.5rem;
+    line-height: 1;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white;
+  }
+
+  .card-description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-link {
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .card-link:hover {
+    color: #cceeff;
+  }
+
+  /* Adjustments for Services section to account for overlapping cards */
   .services {
-    padding: 0px 20px 50px 20px;
+    padding-top: 220px; /* Adjust this value based on card height */
+    padding-bottom: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   .section-title {
@@ -832,6 +1111,33 @@
 
   .stat-card:hover {
     transform: translateY(-5px);
+  }
+
+  /* Video Section */
+  .video-wrapper {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 992px) {
+    .features-grid-container {
+      position: relative;
+      transform: none;
+      left: auto;
+      bottom: auto;
+      width: 100%;
+      margin-top: -80px; /* Pulls it up slightly */
+      padding: 1rem;
+    }
+
+    .services {
+      padding-top: 2rem;
+    }
+
+    .hero-container {
+      height: 70vh;
+    }
   }
 
   @media (max-width: 768px) {

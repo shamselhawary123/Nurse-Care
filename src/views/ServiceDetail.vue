@@ -224,7 +224,7 @@ onMounted(() => {
     <div class="container mx-auto px-4 py-12">
       <div class="max-w-4xl mx-auto">
         <!-- Hero Section -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8" data-aos="fade-up">
           <div class="relative h-64 md:h-[500px]">
             <img 
               :src="service.image" 
@@ -240,19 +240,21 @@ onMounted(() => {
         </div>
 
         <!-- Content Section -->
-        <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="bg-white rounded-lg shadow-lg p-8" data-aos="fade-up" data-aos-delay="200">
           <div class="prose max-w-none mb-12">
             <p class="text-xl leading-relaxed text-gray-600">{{ service.fullDescription }}</p>
           </div>
 
           <!-- Features Section -->
           <div v-if="service.features" class="mb-12">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">مميزات الخدمة</h2>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800" data-aos="fade-up">مميزات الخدمة</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div 
-                v-for="feature in service.features" 
-                :key="feature" 
+                v-for="(feature, index) in service.features" 
+                :key="index" 
                 class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                data-aos="fade-up"
+                :data-aos-delay="100 * (index + 1)"
               >
                 <i class="fas fa-check-circle text-primary ml-3 text-xl"></i>
                 <span class="text-gray-700 text-lg">{{ feature }}</span>
@@ -262,12 +264,14 @@ onMounted(() => {
 
           <!-- Includes Section -->
           <div v-if="service.includes" class="mb-12">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800">ماذا تشمل الخدمة؟</h2>
+            <h2 class="text-2xl font-bold mb-6 text-gray-800" data-aos="fade-up">ماذا تشمل الخدمة؟</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div 
-                v-for="item in service.includes" 
-                :key="item" 
+                v-for="(item, index) in service.includes" 
+                :key="index" 
                 class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                data-aos="fade-up"
+                :data-aos-delay="100 * (index + 1)"
               >
                 <i class="fas fa-circle-check text-primary ml-3 text-xl"></i>
                 <span class="text-gray-700 text-lg">{{ item }}</span>

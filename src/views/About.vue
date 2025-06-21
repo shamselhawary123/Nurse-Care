@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Hero Section -->
-    <div class="bg-white py-16">
+    <div class="bg-white py-16" data-aos="fade-in">
       <div class="container mx-auto px-4">
         <h1 class="text-4xl font-bold text-center text-gray-900 mb-6">
           مرحبًا بكم في الرعاية المنزلية - شريككم الموثوق في الصحة والراحة
@@ -13,7 +13,7 @@
     <div class="relative bg-white py-12">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center gap-8">
-          <div class="md:w-1/2">
+          <div class="md:w-1/2" data-aos="fade-right">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">
               رعاية رحيمة عند باب منزلكم
             </h2>
@@ -25,7 +25,7 @@
               يضمن فريقنا أعلى جودة من الرعاية لحياتكم.
             </p>
           </div>
-          <div class="md:w-1/2">
+          <div class="md:w-1/2" data-aos="fade-left">
             <img
               src="/img/card.png"
               alt="رعاية المسنين"
@@ -38,14 +38,14 @@
     <!-- Why Choose Us Section -->
     <div class="bg-gray-50 py-16">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12" data-aos="fade-up">
           لماذا تختار الرعاية المنزلية؟
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Feature 1 -->
           <div
-            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="100">
             <div
               class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg
@@ -70,7 +70,7 @@
 
           <!-- Feature 2 -->
           <div
-            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="200">
             <div
               class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg
@@ -93,7 +93,7 @@
 
           <!-- Feature 3 -->
           <div
-            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="300">
             <div
               class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg
@@ -116,7 +116,7 @@
 
           <!-- Feature 4 -->
           <div
-            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="400">
             <div
               class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg
@@ -139,7 +139,7 @@
 
           <!-- Feature 5 -->
           <div
-            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="500">
             <div
               class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg
@@ -162,7 +162,7 @@
 
           <!-- Feature 6 -->
           <div
-            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
+            class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow" data-aos="fade-up" data-aos-delay="600">
             <div
               class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
               <svg
@@ -189,13 +189,13 @@
     <!-- Testimonials Section -->
     <div class="bg-white py-16">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12" data-aos="fade-up">
           ماذا يقول عملاؤنا
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <!-- Testimonial 1 -->
-          <div class="bg-gray-50 rounded-lg p-6">
+          <div class="bg-gray-50 rounded-lg p-6" data-aos="fade-up" data-aos-delay="100">
             <div class="flex items-center mb-4">
               <img
                 src="/img/1g.png"
@@ -213,7 +213,7 @@
           </div>
 
           <!-- Testimonial 2 -->
-          <div class="bg-gray-50 rounded-lg p-6">
+          <div class="bg-gray-50 rounded-lg p-6" data-aos="fade-up" data-aos-delay="200">
             <div class="flex items-center mb-4">
               <img
                 src="/img/2g.png"
@@ -231,7 +231,7 @@
           </div>
 
           <!-- Testimonial 3 -->
-          <div class="bg-gray-50 rounded-lg p-6">
+          <div class="bg-gray-50 rounded-lg p-6" data-aos="fade-up" data-aos-delay="300">
             <div class="flex items-center mb-4">
               <img
                 src="/img/3g.png"
@@ -246,7 +246,7 @@
           </div>
 
           <!-- Testimonial 4 -->
-          <div class="bg-gray-50 rounded-lg p-6">
+          <div class="bg-gray-50 rounded-lg p-6" data-aos="fade-up" data-aos-delay="400">
             <div class="flex items-center mb-4">
               <img
                 src="/img/5g.png"

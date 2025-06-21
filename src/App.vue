@@ -7,8 +7,11 @@
 <template>
   <Header />
   <main class="pt-16 min-h-screen">
-    <!-- Add min-height to push footer down -->
-    <RouterView />
+    <RouterView v-slot="{ Component }">
+      <Transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </RouterView>
   </main>
   <Footer />
 </template>
@@ -42,5 +45,13 @@
 
   main {
     flex: 1;
+  }
+
+  /* Fade transition for route changes */
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter-from, .fade-leave-to {
+    opacity: 0;
   }
 </style>

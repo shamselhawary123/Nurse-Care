@@ -82,15 +82,35 @@
     }
   };
 
-  const toggleDropdown = (e) => {
+  const toggleDropdown = (e: MouseEvent) => {
     e.stopPropagation();
     showDropdown.value = !showDropdown.value;
   };
 
-  const openNotification = (notif) => {
-    // Mark as read (optional: send to backend)
-    notif.read = true;
-    unreadCount.value = notifications.value.filter(n => !n.read).length;
+  const openNotification = async (notif: Notification) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`/api/v1/notifications/${notif._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ read: true }),
+      });
+      
+      if (res.ok) {
+        // Refetch notifications to update the list and count
+        await fetchNotifications();
+      } else {
+        const errorData = await res.json();
+        console.error("Backend error:", errorData.message);
+      }
+
+    } catch (error) {
+      console.error("Failed to send update request:", error);
+    }
+    
     // Redirect to notifications page
     router.push("/notifications");
     showDropdown.value = false;
@@ -383,14 +403,14 @@
     transition: color 0.2s;
   }
   .fa-bell.has-unread {
-    color: #ff9800; /* Highlight color for new notifications */
+    color: black; /* Highlight color for new notifications */
   }
 
   .notification-badge {
     position: absolute;
     top: -6px;
     right: -8px;
-    background: #ff9800;
+    background: red;
     color: #fff;
     border-radius: 50%;
     font-size: 0.75rem;
@@ -437,3 +457,5 @@
     padding: 1rem 0;
   }
 </style>
+
+export default {};

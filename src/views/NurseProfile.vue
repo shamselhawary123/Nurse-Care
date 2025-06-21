@@ -102,7 +102,7 @@
   const overallRating = computed(() => {
     if (!reviews.value.length) return 0;
     const sum = reviews.value.reduce((acc, r) => acc + (r.ratings || 0), 0);
-    return (sum / reviews.value.length).toFixed(1); // 1 decimal
+    return parseFloat((sum / reviews.value.length).toFixed(1)); // 1 decimal
   });
 
   // If you want to use the same for clinic/assistant, or set static values:
@@ -111,7 +111,7 @@
     // Example: 80% of reviews are 5, 20% are 4
     if (!reviews.value.length) return 0;
     // You can use a different logic if you want
-    return (reviews.value.filter(r => r.ratings >= 4).length / reviews.value.length * 5).toFixed(1);
+    return parseFloat((reviews.value.filter(r => r.ratings >= 4).length / reviews.value.length * 5).toFixed(1));
   });
 
   // Helper to render stars
@@ -178,7 +178,10 @@
             <h1 class="text-3xl font-bold text-primary mb-2">
               {{ nurse.firstName }} {{ nurse.lastName }}
             </h1>
-            <div class="flex flex-wrap gap-4 items-center mb-4 text-gray-700 text-lg">
+            <div class="flex flex-wrap gap-4 items-center mb-4 text-gray-700"
+             style="font-size: 1.22rem;
+            line-height: 1.75rem;
+            font-weight: 900;">
               <span v-if="nurse.gender">النوع: {{ nurse.gender === 'male' ? 'ذكر' : nurse.gender === 'female' ? 'أنثى' : nurse.gender }}</span>
               <span v-if="nurse.age">العمر: {{ nurse.age }} سنة</span>
             </div>
