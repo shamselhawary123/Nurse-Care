@@ -6,6 +6,17 @@
   import { Autoplay, EffectFade } from 'swiper/modules';
   import 'swiper/css';
   import 'swiper/css/effect-fade';
+  import axios from 'axios';
+
+  interface Nurse {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    personalPhoto: string;
+    address: string;
+    averageRating: number;
+    reviewsCount: number;
+  }
 
   const router = useRouter();
   const currentSlide = ref(0);
@@ -85,50 +96,29 @@
     },
   ]);
 
-  const nurses = ref([
-    {
-      id: 1,
-      name: "سلمى السيد",
-      specialization: ["رعاية المسنين", "رعاية ما بعد العمليات"],
-      image: "/img/WhatsApp Image 2025-03-07 at 01.15.33_40e54431.jpg",
-      rating: 4,
-      totalRatings: 95,
-      location: "المعادي : شارع 9",
-      fees: 200,
-      waitingTime: "15 دقيقة",
-      phone: "16676",
-      isAvailable: true,
-    },
-    {
-      id: 2,
-      name: "ابو السيد",
-      specialization: ["رعاية الأم والطفل", "العناية المركزة"],
-      image: "/img/WhatsApp Image يي.jpg",
-      rating: 4.9,
-      totalRatings: 120,
-      location: "مدينة ميت غمر ",
-      fees: 250,
-      waitingTime: "10 دقيقة",
-      phone: "011",
-      isAvailable: true,
-    },
-    {
-      id: 3,
-      name: "ابو ابراهيم",
-      specialization: ["رعاية الأم والطفل", "العناية المركزة"],
-      image: "/img/WhatsApp Image هه.jpg",
-      rating: 5,
-      totalRatings: 120,
-      location: "مدينة البوها",
-      fees: 250,
-      waitingTime: "10 دقيقة",
-      phone: "012",
-      isAvailable: true,
-    },
-  ]);
+  const topRatedNurses = ref<Nurse[]>([]);
+  const featuredServices = ref<any[]>([]);
+  const nursesLoading = ref(true);
+  const nursesError = ref<string | null>(null);
 
-  const getTopRatedNurses = () => {
-    return nurses.value.sort((a, b) => b.rating - a.rating).slice(0, 3);
+  const fetchHomepageData = async () => {
+    // Fetch featured services (still static)
+    featuredServices.value = services.value.slice(0, 3);
+
+    // Fetch top-rated nurses
+    try {
+      nursesLoading.value = true;
+      nursesError.value = null;
+      const response = await axios.get('/api/v1/users/nurses?sort=-averageRating&limit=3');
+      if (response.data && response.data.status === 'success') {
+        topRatedNurses.value = response.data.data;
+      }
+    } catch (err) {
+      console.error("Failed to fetch top-rated nurses:", err);
+      nursesError.value = 'لا يمكن تحميل الممرضين الأعلى تقييمًا.';
+    } finally {
+      nursesLoading.value = false;
+    }
   };
 
   const navigateToNurseList = () => {
@@ -250,6 +240,8 @@
     if (statsRef.value) {
       observer.observe(statsRef.value);
     }
+
+    fetchHomepageData();
 
     // Start the automatic slideshow
     const slideInterval = setInterval(() => {
@@ -442,55 +434,64 @@
       </div>
     </section>
 
-    <!-- <div class="filters secondary-filters">
-      <button><i class="fa-solid fa-circle-chevron-down"></i> تصفية</button>
-      <button><i class="fa-solid fa-circle-chevron-down"></i> ترتيب حسب</button>
-    </div> -->
-
-    <div class="BookService">
-      <div
-        v-for="(service, index) in services.slice(0, 3)"
-        :key="service.id"
-        class="BookService-card"
-        data-aos="fade-up" :data-aos-delay="100 * index"
-        >
-        <img class="first-image" :src="service.image" :alt="service.title" />
-        <div class="BookService-info">
-          <h3>{{ service.title }}</h3>
-          <p>{{ service.description }}</p>
-          <button class="btn" @click="navigateToNurseList">احجز الآن</button>
+    <!-- Top Rated Section -->
+    <section class="top-rated-section bg-background-soft py-16">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-text-primary">أبرز مقدمي الرعاية والخدمات</h2>
+          <p class="text-text-secondary mt-2">استكشف خدماتنا الأكثر طلباً وممرضينا الأعلى تقييماً</p>
         </div>
-        <div class="rate">
-          <div class="nurse-profile">
-            <img
-              :src="getTopRatedNurses()[index]?.image"
-              :alt="getTopRatedNurses()[index]?.name"
-              class="nurse-photo" />
-            <div class="rating-info">
-              <h3>{{ getTopRatedNurses()[index]?.name }}</h3>
-              <!-- <p>{{ getTopRatedNurses()[index]?.specialization[0] }}</p> -->
-              <p>{{ getTopRatedNurses()[index]?.location }}</p>
-              <!-- <p>{{ getTopRatedNurses()[index]?.fees }} جنيه</p> -->
-              <div class="stars">
-                <i
-                  v-for="star in 5"
-                  :key="star"
-                  :class="[
-                    'fas fa-star',
-                    star <= getTopRatedNurses()[index]?.rating
-                      ? 'text-yellow-400'
-                      : 'text-gray-300',
-                  ]">
-                </i>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <!-- Services Column -->
+          <div class="space-y-6" data-aos="fade-left">
+            <div
+              v-for="service in featuredServices"
+              :key="service.id"
+              class="bg-surface rounded-lg shadow-md overflow-hidden p-5 flex items-center gap-5 transition-transform duration-300 hover:-translate-y-1 border border-border"
+              @click="router.push(service.link)"
+              style="cursor: pointer;"
+            >
+              <img :src="service.image" :alt="service.title" class="w-32 h-32 object-cover rounded-md" />
+              <div class="flex-grow">
+                <h3 class="font-bold text-lg text-text-primary mb-2">{{ service.title }}</h3>
+                <p class="text-sm text-text-secondary mb-4">{{ service.description }}</p>
+                <button class="btn-primary text-sm" @click.stop="navigateToNurseList">احجز الآن</button>
               </div>
-              <!-- <span class="rating-text"
-                >{{ getTopRatedNurses()[index]?.totalRatings }} تقييم</span
-              > -->
+            </div>
+          </div>
+
+          <!-- Nurses Column -->
+          <div class="space-y-6" data-aos="fade-right">
+            <div v-if="nursesLoading" class="text-center text-text-secondary">جاري تحميل الممرضين...</div>
+            <div v-else-if="nursesError" class="text-red-500 text-center">{{ nursesError }}</div>
+            <div
+              v-else
+              v-for="nurse in topRatedNurses"
+              :key="nurse._id"
+              class="bg-surface rounded-lg shadow-sm p-4 flex items-center justify-between transition-all duration-300 hover:shadow-md border border-border cursor-pointer"
+              @click="router.push(`/nurse/${nurse._id}`)"
+            >
+              <div class="text-right">
+                <h3 class="font-bold text-lg text-text-primary">{{ nurse.firstName }} {{ nurse.lastName }}</h3>
+                <p class="text-sm text-text-secondary mt-1">{{ nurse.address }}</p>
+                <div class="flex items-center mt-2">
+                  <span class="text-xs text-text-muted ml-2">({{ nurse.reviewsCount || 0 }} تقييم)</span>
+                  <div class="stars flex text-yellow-400 gap-1" dir="ltr">
+                    <i v-for="star in 5" :key="star" class="fas fa-star" :class="{ 'text-gray-300 dark:text-gray-600': star > nurse.averageRating }"></i>
+                  </div>
+                </div>
+              </div>
+              <img 
+                :src="nurse.personalPhoto" 
+                :alt="nurse.firstName" 
+                class="w-20 h-20 rounded-full object-cover border-4 border-primary" 
+              />
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Video Section -->
     <div class="video-wrapper" data-aos="fade-up">
@@ -880,6 +881,18 @@
     gap: 20px;
   }
 
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+  }
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+  }
+
   .BookService-card {
     display: flex;
     background-color: #e9f1f6;
@@ -927,7 +940,6 @@
     background-color: #007b8f;
     color: white;
     padding: 8px 12px;
-    border: none;
     border-radius: 16px;
     cursor: pointer;
     font-size: 14px;

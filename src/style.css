@@ -1,16 +1,69 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --color-background: #ffffff;
+  --color-background-soft: #f9fafb;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+  
+  --color-primary: #007b8f;
+  --color-primary-hover: #006272;
+  --color-primary-soft-bg: #e6f7f9;
+  
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+html.dark {
+  --color-background: #111827;
+  --color-background-soft: #1f2937;
+  --color-surface: #1f2937;
+  --color-border: #374151;
+  
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-muted: #6b7280;
+  
+  --color-primary: #0ea5e9;
+  --color-primary-hover: #0284c7;
+  --color-primary-soft-bg: #1e293b;
+
+  --shadow-color: rgba(0, 0, 0, 0.4);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* General component styles using variables */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.button-primary {
+  background-color: var(--color-primary);
+  color: white;
+  transition: background-color 0.3s ease;
+}
+.button-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+input, select, textarea {
+  background-color: var(--color-background-soft);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }

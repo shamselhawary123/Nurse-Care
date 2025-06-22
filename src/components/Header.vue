@@ -23,8 +23,9 @@
   const showDropdown = ref(false);
 
   const toggleDarkMode = () => {
-    isDarkMode.value = !isDarkMode.value;
-    document.body.classList.toggle("dark-mode");
+    const isDark = document.documentElement.classList.toggle('dark');
+    isDarkMode.value = isDark;
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
   };
 
   const navigateToLogin = () => {
@@ -122,6 +123,15 @@
   };
 
   onMounted(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      isDarkMode.value = true;
+    } else {
+      document.documentElement.classList.remove('dark');
+      isDarkMode.value = false;
+    }
+
     checkLogin();
     fetchUser();
     fetchNotifications();
@@ -237,49 +247,58 @@
 
 <style scoped>
   .header {
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+    box-shadow: 0 2px 4px var(--shadow-color);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
     direction: rtl;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 0.8rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 64px;
   }
 
   .icons {
     display: flex;
-    gap: 1.5rem;
-    font-size: 1.25rem;
+    gap: 1rem;
+    align-items: center;
+    color: var(--color-text-secondary);
   }
-  .icons i:hover {
-    color: var(--primary-color, #1b7da5);
+  .icons .fa-solid:hover,
+  .icons .fas:hover {
+    color: var(--color-primary);
   }
 
   .nav {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   .nav-link {
-    text-decoration: none;
-    color: #333;
+    color: var(--color-text-primary);
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: color 0.3s;
+    font-size: 1rem;
+    position: relative;
+    padding-bottom: 4px;
   }
-
-  .nav-link:hover,
-  .nav-link.router-link-active {
-    color: var(--primary-color, #1b7da5);
+  .nav-link:hover {
+    color: var(--color-primary);
+  }
+  .nav-link.router-link-exact-active {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
   }
 
   .logo {
@@ -289,7 +308,7 @@
   }
 
   .logo img {
-    height: 60px;
+    height: 40px;
     width: auto;
   }
 

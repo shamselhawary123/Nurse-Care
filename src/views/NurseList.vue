@@ -283,7 +283,7 @@
             <div
               v-for="(nurse, index) in nurses"
               :key="nurse._id"
-              class="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+              class="bg-surface rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-1 border border-border"
               data-aos="fade-up"
               :data-aos-delay="50 * (index % limit)"
             >
@@ -294,21 +294,21 @@
                     <img
                       :src="nurse.personalPhoto || '/img/a1.png'"
                       :alt="nurse.firstName + ' ' + nurse.lastName"
-                      class="w-28 h-28 rounded-full object-cover border-4 border-cyan-600"
+                      class="w-28 h-28 rounded-full object-cover border-4 border-primary"
                     />
                     <span
                       v-if="nurse.isActive"
-                      class="absolute bottom-1 right-1 block h-5 w-5 rounded-full bg-green-500 border-2 border-white"
+                      class="absolute bottom-1 right-1 block h-5 w-5 rounded-full bg-green-500 border-2 border-surface"
                       title="متاح"
                     ></span>
                   </div>
 
                   <!-- Name & Department -->
-                  <h2 class="text-xl font-bold text-gray-800">
+                  <h2 class="text-xl font-bold text-text-primary">
                     {{ nurse.firstName }} {{ nurse.lastName }}
                   </h2>
-                  <div v-if="nurse.departmentId?.name" class="flex items-center text-gray-500 mt-1">
-                    <i class="fa-solid fa-stethoscope text-sm mr-1 text-cyan-600"></i>
+                  <div v-if="nurse.departmentId?.name" class="flex items-center text-text-secondary mt-1">
+                    <i class="fa-solid fa-stethoscope text-sm mr-1 text-primary"></i>
                     <span class="text-sm font-medium">
                       {{ nurse.departmentId.name }}
                     </span>
@@ -319,24 +319,24 @@
                     <span
                       v-for="spec in nurse.specialties"
                       :key="spec._id"
-                      class="bg-cyan-50 text-cyan-700 px-3 py-1 rounded-full text-xs font-semibold"
+                      class="bg-primary-soft-bg text-primary px-3 py-1 rounded-full text-xs font-semibold"
                     >
                       {{ spec.name }}
                     </span>
                   </div>
 
                   <!-- Contact Info -->
-                  <div class="mt-5 space-y-2 text-sm text-gray-600 w-full">
+                  <div class="mt-5 space-y-2 text-sm text-text-secondary w-full">
                      <div class="flex items-center justify-center">
-                      <i class="fas fa-map-marker-alt text-cyan-600 w-4 text-center mr-2"></i>
+                      <i class="fas fa-map-marker-alt text-primary w-4 text-center mr-2"></i>
                       <span>{{ nurse.address }}</span>
                     </div>
                     <div class="flex items-center justify-center">
-                      <i class="fas fa-envelope text-cyan-600 w-4 text-center mr-2"></i>
+                      <i class="fas fa-envelope text-primary w-4 text-center mr-2"></i>
                       <span>{{ nurse.email }}</span>
                     </div>
                     <div class="flex items-center justify-center">
-                      <i class="fas fa-phone text-cyan-600 w-4 text-center mr-2"></i>
+                      <i class="fas fa-phone text-primary w-4 text-center mr-2"></i>
                       <span>{{ nurse.phoneNumber }}</span>
                     </div>
                   </div>
@@ -344,7 +344,7 @@
               </div>
 
               <!-- Action Buttons -->
-              <div class="bg-gray-50 p-4 flex flex-col sm:flex-row gap-3">
+              <div class="bg-background-soft p-4 flex flex-col sm:flex-row gap-3 border-t border-border">
                 <button
                   @click.stop="sendRequest(nurse._id)"
                   class="flex-1 request-btn"
@@ -397,12 +397,12 @@
 <style scoped>
   .nurse-list-page {
     direction: rtl;
-    background-color: #f8fafc;
+    background-color: var(--color-background);
     min-height: 100vh;
   }
 
   .text-primary {
-    color: #007b8f;
+    color: var(--color-primary);
   }
   .request-btn,
   .call-btn {
@@ -416,21 +416,22 @@
   }
 
   .request-btn {
-    background-color: #007b8f;
+    background-color: var(--color-primary);
     color: white;
   }
 
   .request-btn:hover {
-    background-color: #006272;
+    background-color: var(--color-primary-hover);
   }
 
   .call-btn {
-    background-color: #e6f7f9;
-    color: #007b8f;
+    background-color: var(--color-primary-soft-bg);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
   }
 
   .call-btn:hover {
-    background-color: #d0f0f4;
+    opacity: 0.8;
   }
   .loading-spinner {
     width: 50px;
@@ -460,9 +461,9 @@
     margin-top: 2rem;
   }
   .pagination-btn {
-    background: white;
-    border: 1px solid #e5e7eb;
-    color: #007b8f;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -476,9 +477,9 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   }
   .pagination-btn.active {
-    background: #007b8f;
+    background: var(--color-primary);
     color: white;
-    border-color: #007b8f;
+    border-color: var(--color-primary);
   }
   .pagination-btn:disabled {
     opacity: 0.5;

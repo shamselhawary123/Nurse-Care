@@ -208,39 +208,39 @@ onUnmounted(() => {
 <template>
   <div class="services-page">
     <!-- Services Section -->
-    <section class="services-section bg-gray-50 py-16">
+    <section class="services-section bg-background-soft py-16">
       <div class="container mx-auto px-4">
         <div class="text-center mb-12">
-          <h1 class="text-4xl font-bold text-gray-800" data-aos="fade-up">خدمات Nurse-Care</h1>
-          <div class="w-24 h-1 bg-cyan-600 mx-auto mt-4"></div>
+          <h1 class="text-4xl font-bold text-text-primary" data-aos="fade-up">خدمات Nurse-Care</h1>
+          <div class="w-24 h-1 bg-primary mx-auto mt-4"></div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           <div v-for="(service, index) in services" :key="service.id" 
-               class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2" 
+               class="bg-surface rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 border border-border" 
                data-aos="fade-up" :data-aos-delay="100 * index">
             
             <div class="relative">
               <img :src="service.image" :alt="service.title" class="w-full h-56 object-cover">
               <div class="absolute top-4 left-4">
-                <img src="/img/logo (3).png" alt="Logo" class="w-24 bg-white p-2 rounded-lg shadow-md">
+                <img src="/img/logo (3).png" alt="Logo" class="w-24 bg-surface p-2 rounded-lg shadow-md">
               </div>
               <div class="absolute -bottom-8 left-1/2 -translate-x-1/2">
-                <div class="bg-cyan-600 rounded-full border-4 border-white shadow-lg" style="padding: 0.3rem;">
-                   <img :src="service.icon" :alt="service.title + ' icon'" class="w-16 h-16 object-cover rounded-full">
-                </div>
+                 <div class="bg-primary rounded-full border-4 border-surface shadow-lg" style="padding: 0.3rem;">
+                     <img :src="service.icon" :alt="service.title + ' icon'" class="w-16 h-16 object-cover rounded-full">
+                  </div>
               </div>
             </div>
 
             <div class="p-6 pt-12 flex-grow flex flex-col text-center">
-              <h3 class="text-2xl font-bold text-gray-800 mb-3">{{ service.title }}</h3>
-              <p class="text-gray-600 text-base leading-relaxed flex-grow">{{ service.description }}</p>
+              <h3 class="text-2xl font-bold text-text-primary mb-3">{{ service.title }}</h3>
+              <p class="text-text-secondary text-base leading-relaxed flex-grow">{{ service.description }}</p>
               
               <div class="mt-6 space-y-3">
-                <button @click="$router.push('/nurse-list')" class="w-full bg-cyan-600 text-white py-3 rounded-lg font-semibold hover:bg-cyan-700 transition-colors text-lg">
+                <button @click="$router.push('/nurse-list')" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-hover transition-colors text-lg">
                   اطلب/استفسر عن الخدمة
                 </button>
-                <button @click="navigateToService(service.title)" class="w-full text-cyan-600 font-semibold hover:text-cyan-800 transition-colors text-lg">
+                <button @click="navigateToService(service.title)" class="w-full text-primary font-semibold hover:text-primary-hover transition-colors text-lg">
                   معلومات عن الخدمة
                 </button>
               </div>
@@ -251,17 +251,19 @@ onUnmounted(() => {
     </section>
 
     <!-- Why Choose Us Section -->
-    <section class="why-choose-us bg-gray-50">
+    <section class="why-choose-us bg-background-soft">
       <div class="container mx-auto px-4 py-12">
         <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">لماذا تختار الرعاية المنزلية؟</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="(feature, index) in features" :key="feature.id" class="feature-card" data-aos="fade-up" :data-aos-delay="100 * index">
+          <div v-for="(feature, index) in features" :key="feature.id" 
+               class="bg-surface border border-border rounded-lg p-8 transition-transform duration-300 hover:-translate-y-2" 
+               data-aos="fade-up" :data-aos-delay="100 * index">
             <div class="text-center mb-4">
               <i :class="feature.icon" class="text-4xl text-primary"></i>
             </div>
-            <h3 class="text-xl font-semibold text-center mb-2">{{ feature.title }}</h3>
-            <p class="text-gray-600 text-center">{{ feature.description }}</p>
+            <h3 class="text-xl font-semibold text-center mb-2 text-text-primary">{{ feature.title }}</h3>
+            <p class="text-text-secondary text-center">{{ feature.description }}</p>
           </div>
         </div>
       </div>
@@ -274,37 +276,11 @@ onUnmounted(() => {
   direction: rtl;
 }
 
-.feature-card {
-  background: white;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
-}
-
 .feature-card:hover {
   transform: translateY(-5px);
 }
 
 .text-primary {
-  color: #007b8f;
-}
-
-@media (prefers-color-scheme: dark) {
-  .services-page {
-    background-color: #f8fafc;
-  }
-
-  .feature-card {
-    background-color: white;
-  }
-
-  h1, h2, h3 {
-    color: #333;
-  }
-
-  p {
-    color: #666;
-  }
+  color: var(--color-primary);
 }
 </style> 

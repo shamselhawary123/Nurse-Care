@@ -224,57 +224,53 @@ onMounted(() => {
     <div class="container mx-auto px-4 py-12">
       <div class="max-w-4xl mx-auto">
         <!-- Hero Section -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8" data-aos="fade-up">
+        <div class="bg-surface rounded-lg shadow-lg overflow-hidden mb-8 border border-border" data-aos="fade-up">
           <div class="relative h-64 md:h-[500px]">
             <img 
               :src="service.image" 
               :alt="service.title" 
               class="w-full h-full object-cover"
             >
-            <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
-            <div class="absolute bottom-6 right-6 text-right max-w-2xl">
-              <h1 class="text-4xl font-bold text-white mb-4">{{ service.title }}</h1>
-              <p class="text-xl text-white/90">{{ service.description }}</p>
-            </div> -->
           </div>
         </div>
 
         <!-- Content Section -->
-        <div class="bg-white rounded-lg shadow-lg p-8" data-aos="fade-up" data-aos-delay="200">
+        <div class="bg-surface rounded-lg shadow-lg p-8 border border-border" data-aos="fade-up" data-aos-delay="200">
           <div class="prose max-w-none mb-12">
-            <p class="text-xl leading-relaxed text-gray-600">{{ service.fullDescription }}</p>
+            <h1 class="text-3xl font-bold text-text-primary mb-4">{{ service.title }}</h1>
+            <p class="text-xl leading-relaxed text-text-secondary">{{ service.fullDescription }}</p>
           </div>
 
           <!-- Features Section -->
           <div v-if="service.features" class="mb-12">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800" data-aos="fade-up">مميزات الخدمة</h2>
+            <h2 class="text-2xl font-bold mb-6 text-text-primary" data-aos="fade-up">مميزات الخدمة</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div 
                 v-for="(feature, index) in service.features" 
                 :key="index" 
-                class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                class="flex items-center p-4 bg-background-soft rounded-lg hover:bg-opacity-80 transition-colors border border-border"
                 data-aos="fade-up"
                 :data-aos-delay="100 * (index + 1)"
               >
                 <i class="fas fa-check-circle text-primary ml-3 text-xl"></i>
-                <span class="text-gray-700 text-lg">{{ feature }}</span>
+                <span class="text-text-secondary text-lg">{{ feature }}</span>
               </div>
             </div>
           </div>
 
           <!-- Includes Section -->
           <div v-if="service.includes" class="mb-12">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800" data-aos="fade-up">ماذا تشمل الخدمة؟</h2>
+            <h2 class="text-2xl font-bold mb-6 text-text-primary" data-aos="fade-up">ماذا تشمل الخدمة؟</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div 
                 v-for="(item, index) in service.includes" 
                 :key="index" 
-                class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                class="flex items-center p-4 bg-background-soft rounded-lg hover:bg-opacity-80 transition-colors border border-border"
                 data-aos="fade-up"
                 :data-aos-delay="100 * (index + 1)"
               >
                 <i class="fas fa-circle-check text-primary ml-3 text-xl"></i>
-                <span class="text-gray-700 text-lg">{{ item }}</span>
+                <span class="text-text-secondary text-lg">{{ item }}</span>
               </div>
             </div>
           </div>
@@ -305,13 +301,12 @@ onMounted(() => {
 <style scoped>
 .service-detail-page {
   direction: rtl;
-  margin: 0 50px 0 50px;
-  background-color: #f8fafc;
+  background-color: var(--color-background);
   min-height: 100vh;
 }
 
 .btn-primary {
-  background-color: #007b8f;
+  background-color: var(--color-primary);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
@@ -320,29 +315,37 @@ onMounted(() => {
 }
 
 .btn-primary:hover {
-  background-color: #49a8d3;
+  background-color: var(--color-primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--shadow-color);
 }
 
 .btn-secondary {
-  background-color: white;
-  color: #007b8f;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   font-weight: 500;
-  border: 2px solid #007b8f;
+  border: 2px solid var(--color-primary);
   transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-background-soft);
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--shadow-color);
 }
 
 .text-primary {
-  color: #007b8f;
+  color: var(--color-primary);
+}
+
+/* Prose overrides for dark mode */
+.prose {
+  color: var(--color-text-secondary);
+}
+.prose h1, .prose h2, .prose h3, .prose h4, .prose strong {
+  color: var(--color-text-primary);
 }
 
 /* Card hover effects */

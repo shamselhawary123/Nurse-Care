@@ -24,10 +24,10 @@
   <div class="contact-page">
     <div class="container mx-auto px-4 py-12">
       <div
-        class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 contact-container">
-        <h1 class="text-3xl font-bold mb-8">اتصل بنا</h1>
+        class="max-w-4xl mx-auto bg-surface rounded-lg shadow-lg p-8 contact-container border border-border">
+        <h1 class="text-3xl font-bold mb-8 text-text-primary">اتصل بنا</h1>
 
-        <p class="mb-8">
+        <p class="mb-8 text-text-secondary">
           إذا كان لديك أي استفسارات أو تحتاج إلى مزيد من المعلومات، فلا تتردد في
           الاتصال بنا. نحن هنا لمساعدتك!
           <br />
@@ -39,7 +39,7 @@
             <div class="mb-6">
               <a
                 href="tel:484.324.2400"
-                class="flex items-center text-primary hover:text-secondary">
+                class="flex items-center text-primary hover:text-primary-hover">
                 <i class="fas fa-phone ml-2"></i>
                 01111111111
               </a>
@@ -48,13 +48,13 @@
             <div class="mb-6">
               <a
                 href="mailto:info@mediaproper.com"
-                class="flex items-center text-primary hover:text-secondary">
+                class="flex items-center text-primary hover:text-primary-hover">
                 <i class="fas fa-envelope ml-2"></i>
                 healthCare@gmail.com
               </a>
             </div>
 
-            <div>
+            <div class="text-text-secondary">
               <div class="flex items-start">
                 <i class="fas fa-map-marker-alt mt-1 ml-2 text-primary"></i>
                 <div>
@@ -67,7 +67,7 @@
 
           <form @submit="handleSubmit" class="contact-form">
             <div class="mb-6">
-              <label class="block mb-2">الاسم</label>
+              <label class="block mb-2 text-text-primary">الاسم</label>
               <div class="grid grid-cols-2 gap-4">
                 <input
                   type="text"
@@ -85,7 +85,7 @@
             </div>
 
             <div class="mb-6">
-              <label class="block mb-2">البريد الإلكتروني</label>
+              <label class="block mb-2 text-text-primary">البريد الإلكتروني</label>
               <input
                 type="email"
                 v-model="email"
@@ -95,7 +95,7 @@
             </div>
 
             <div class="mb-6">
-              <label class="block mb-2">الهاتف</label>
+              <label class="block mb-2 text-text-primary">الهاتف</label>
               <input
                 type="tel"
                 v-model="phone"
@@ -104,7 +104,7 @@
             </div>
 
             <div class="mb-6">
-              <label class="block mb-2">الرسالة</label>
+              <label class="block mb-2 text-text-primary">الرسالة</label>
               <textarea
                 v-model="message"
                 placeholder="اكتب رسالتك..."
@@ -123,7 +123,7 @@
 <style scoped>
   .contact-page {
     direction: rtl;
-    background-color: #f8fafc;
+    background-color: var(--color-background-soft);
     min-height: 100vh;
   }
 
@@ -137,33 +137,34 @@
     font-size: 18px;
   }
   .contact-page label {
-    /* font-size: 16px; */
     font-weight: bold;
   }
   .text-primary {
-    color: #007b8f;
+    color: var(--color-primary);
   }
 
-  .text-secondary {
-    color: #49a8d3;
+  .hover\:text-primary-hover:hover {
+    color: var(--color-primary-hover);
   }
 
   .form-input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
     border-radius: 0.375rem;
     transition: all 0.3s ease;
   }
 
   .form-input:focus {
     outline: none;
-    border-color: #007b8f;
-    box-shadow: 0 0 0 3px rgba(0, 123, 143, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-soft-bg);
   }
 
   .submit-btn {
-    background-color: #007b8f;
+    background-color: var(--color-primary);
     color: white;
     padding: 0.75rem 2rem;
     border-radius: 0.375rem;
@@ -173,32 +174,21 @@
   }
 
   .submit-btn:hover {
-    background-color: #49a8d3;
+    background-color: var(--color-primary-hover);
     transform: translateY(-2px);
   }
 
-  @media (prefers-color-scheme: dark) {
-    .contact-page {
-      background-color: #e9ebee;
-    }
-
-    .bg-white {
-      background-color: white;
-    }
-  }
-
   .contact-container {
-    background-image: url("/img/back.jpg");
+    background-image: url("/src/assets/medical-bg.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
-    padding: 32px; /* تعديل مناسب للمحتوى */
-    border-radius: 8px; /* إذا كنت تريد استدارة الزوايا */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* إضافة ظل */
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px var(--shadow-color);
   }
 
-  /* إضافة التدرج اللوني فوق الصورة إذا كنت تريدها */
   .contact-container::before {
     content: "";
     position: absolute;
@@ -206,9 +196,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    /* background: rgba(255, 255, 255, 0.6);  تدرج لوني خفيف */
+    background: var(--color-surface);
+    opacity: 0.85;
     z-index: 1;
-    border-radius: 10px;
+    border-radius: 8px;
   }
 
   .contact-container > * {
