@@ -39,7 +39,9 @@
                 required
                 class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="الاسم الأول" />
-              <span v-if="errors.firstName" class="text-red-500 text-xs mt-1">{{ errors.firstName }}</span>
+              <span v-if="errors.firstName" class="text-red-500 text-xs mt-1">{{
+                errors.firstName
+              }}</span>
             </div>
             <div>
               <label
@@ -56,23 +58,50 @@
                 required
                 class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="الاسم الأخير" />
-              <span v-if="errors.lastName" class="text-red-500 text-xs mt-1">{{ errors.lastName }}</span>
+              <span v-if="errors.lastName" class="text-red-500 text-xs mt-1">{{
+                errors.lastName
+              }}</span>
             </div>
           </div>
-<div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="gender" class="block text-sm font-medium text-gray-700">النوع</label>
-              <select id="gender" v-model="gender" name="gender" required :class="{ 'border-red-500': errors.gender }" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+              <label
+                for="gender"
+                class="block text-sm font-medium text-gray-700"
+                >النوع</label
+              >
+              <select
+                id="gender"
+                v-model="gender"
+                name="gender"
+                required
+                :class="{ 'border-red-500': errors.gender }"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
                 <option value="" disabled>اختر النوع</option>
                 <option value="male">ذكر</option>
                 <option value="female">أنثى</option>
               </select>
-              <span v-if="errors.gender" class="text-red-500 text-xs mt-1">{{ errors.gender }}</span>
+              <span v-if="errors.gender" class="text-red-500 text-xs mt-1">{{
+                errors.gender
+              }}</span>
             </div>
             <div>
-              <label for="age" class="block text-sm font-medium text-gray-700">العمر</label>
-              <input id="age" v-model="age" name="age" type="number" min="1" required :class="{ 'border-red-500': errors.age }" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" placeholder="أدخل عمرك" />
-              <span v-if="errors.age" class="text-red-500 text-xs mt-1">{{ errors.age }}</span>
+              <label for="age" class="block text-sm font-medium text-gray-700"
+                >العمر</label
+              >
+              <input
+                id="age"
+                v-model="age"
+                name="age"
+                type="number"
+                min="1"
+                required
+                :class="{ 'border-red-500': errors.age }"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                placeholder="أدخل عمرك" />
+              <span v-if="errors.age" class="text-red-500 text-xs mt-1">{{
+                errors.age
+              }}</span>
             </div>
           </div>
           <div>
@@ -90,11 +119,15 @@
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
               placeholder="أدخل رقم هاتفك" />
-            <span v-if="errors.phoneNumber" class="text-red-500 text-xs mt-1">{{ errors.phoneNumber }}</span>
+            <span v-if="errors.phoneNumber" class="text-red-500 text-xs mt-1">{{
+              errors.phoneNumber
+            }}</span>
           </div>
 
           <div>
-            <label for="address" class="block text-sm font-medium text-gray-700">العنوان</label>
+            <label for="address" class="block text-sm font-medium text-gray-700"
+              >العنوان</label
+            >
             <select
               id="address"
               v-model="address"
@@ -123,11 +156,11 @@
               <option>قرية ميت سلسيل</option>
               <option>قرية ميت خميس</option>
               <option>قرية نبروه</option>
-              <option>قرية البوها </option>
-
-
+              <option>قرية البوها</option>
             </select>
-            <span v-if="errors.address" class="text-red-500 text-xs mt-1">{{ errors.address }}</span>
+            <span v-if="errors.address" class="text-red-500 text-xs mt-1">{{
+              errors.address
+            }}</span>
           </div>
 
           <div>
@@ -143,7 +176,9 @@
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
               placeholder="أدخل بريدك الإلكتروني" />
-            <span v-if="errors.email" class="text-red-500 text-xs mt-1">{{ errors.email }}</span>
+            <span v-if="errors.email" class="text-red-500 text-xs mt-1">{{
+              errors.email
+            }}</span>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -162,7 +197,9 @@
                 required
                 class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="إنشاء كلمة مرور" />
-              <span v-if="errors.password" class="text-red-500 text-xs mt-1">{{ errors.password }}</span>
+              <span v-if="errors.password" class="text-red-500 text-xs mt-1">{{
+                errors.password
+              }}</span>
             </div>
             <div>
               <label
@@ -179,11 +216,13 @@
                 required
                 class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="تأكيد كلمة المرور" />
-              <span v-if="errors.confirmPassword" class="text-red-500 text-xs mt-1">{{ errors.confirmPassword }}</span>
+              <span
+                v-if="errors.confirmPassword"
+                class="text-red-500 text-xs mt-1"
+                >{{ errors.confirmPassword }}</span
+              >
             </div>
           </div>
-
-          
 
           <!-- Photo Upload Section -->
           <div class="space-y-6">
@@ -301,122 +340,145 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { signup } from "../api/auth";
-import { useForm, useField } from 'vee-validate';
-import * as yup from 'yup';
+  import { ref } from "vue";
+  import { useRouter } from "vue-router";
+  import { signup } from "../api/auth";
+  import { useForm, useField } from "vee-validate";
+  import * as yup from "yup";
 
-const router = useRouter();
-const error = ref("");
-const isLoading = ref(false);
+  const router = useRouter();
+  const error = ref("");
+  const isLoading = ref(false);
 
-// Photo handling refs
-const personalPhoto = ref<File | null>(null);
-const idPhoto = ref<File | null>(null);
-const personalPhotoPreview = ref("");
-const idPhotoPreview = ref("");
+  // Photo handling refs
+  const personalPhoto = ref<File | null>(null);
+  const idPhoto = ref<File | null>(null);
+  const personalPhotoPreview = ref("");
+  const idPhotoPreview = ref("");
 
-// Validation schema
-const schema = yup.object({
-  firstName: yup.string().required('الاسم الأول مطلوب').min(2, 'الاسم الأول يجب أن يكون على الأقل حرفين'),
-  lastName: yup.string().required('الاسم الأخير مطلوب').min(2, 'الاسم الأخير يجب أن يكون على الأقل حرفين'),
-  email: yup.string().required('البريد الإلكتروني مطلوب').email('البريد الإلكتروني غير صالح'),
-  password: yup.string()
-    .required('كلمة المرور مطلوبة')
-    .min(6, 'كلمة المرور يجب أن تكون على الأقل 6 أحرف')
-    // .min(8, 'كلمة المرور يجب أن تكون على الأقل 8 أحرف')
-    // .matches(/[A-Z]/, 'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل')
-    // .matches(/[a-z]/, 'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل')
-    .matches(/[0-9]/, 'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل'),
-  confirmPassword: yup.string()
-    .required('تأكيد كلمة المرور مطلوب')
-    .oneOf([yup.ref('password')], 'كلمات المرور غير متطابقة'),
-  phoneNumber: yup.string()
-    .required('رقم الهاتف مطلوب')
-    .matches(/^01[0-9]{9}$/, 'يجب أن يبدأ الرقم بـ 01 ويجب أن يكون مكون من 11 رقم فقط')
-    .length(11, 'يجب أن يكون الرقم مكون من 11 رقم فقط'),
-  address: yup.string().required('العنوان مطلوب'),
-  acceptTerms: yup.boolean().oneOf([true], 'يجب الموافقة على الشروط والأحكام'),
-  gender: yup.string().required('النوع مطلوب').oneOf(['male', 'female'], 'النوع غير صالح'),
-  age: yup.number().required('العمر مطلوب').min(1, 'العمر يجب أن يكون أكبر من 0'),
-});
+  // Validation schema
+  const schema = yup.object({
+    firstName: yup
+      .string()
+      .required("الاسم الأول مطلوب")
+      .min(2, "الاسم الأول يجب أن يكون على الأقل حرفين"),
+    lastName: yup
+      .string()
+      .required("الاسم الأخير مطلوب")
+      .min(2, "الاسم الأخير يجب أن يكون على الأقل حرفين"),
+    email: yup
+      .string()
+      .required("البريد الإلكتروني مطلوب")
+      .email("البريد الإلكتروني غير صالح"),
+    password: yup
+      .string()
+      .required("كلمة المرور مطلوبة")
+      .min(6, "كلمة المرور يجب أن تكون على الأقل 6 أحرف")
+      // .min(8, 'كلمة المرور يجب أن تكون على الأقل 8 أحرف')
+      // .matches(/[A-Z]/, 'يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل')
+      // .matches(/[a-z]/, 'يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل')
+      .matches(/[0-9]/, "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل"),
+    confirmPassword: yup
+      .string()
+      .required("تأكيد كلمة المرور مطلوب")
+      .oneOf([yup.ref("password")], "كلمات المرور غير متطابقة"),
+    phoneNumber: yup
+      .string()
+      .required("رقم الهاتف مطلوب")
+      .matches(
+        /^01[0-9]{9}$/,
+        "يجب أن يبدأ الرقم بـ 01 ويجب أن يكون مكون من 11 رقم فقط"
+      )
+      .length(11, "يجب أن يكون الرقم مكون من 11 رقم فقط"),
+    address: yup.string().required("العنوان مطلوب"),
+    acceptTerms: yup
+      .boolean()
+      .oneOf([true], "يجب الموافقة على الشروط والأحكام"),
+    gender: yup
+      .string()
+      .required("النوع مطلوب")
+      .oneOf(["male", "female"], "النوع غير صالح"),
+    age: yup
+      .number()
+      .required("العمر مطلوب")
+      .min(1, "العمر يجب أن يكون أكبر من 0"),
+  });
 
-// Initialize form
-const { handleSubmit, errors, resetForm } = useForm({
-  validationSchema: schema
-});
+  // Initialize form
+  const { handleSubmit, errors } = useForm({
+    validationSchema: schema,
+  });
 
-// Define fields
-const { value: firstName } = useField('firstName');
-const { value: lastName } = useField('lastName');
-const { value: email } = useField('email');
-const { value: password } = useField('password');
-const { value: confirmPassword } = useField('confirmPassword');
-const { value: phoneNumber } = useField('phoneNumber');
-const { value: address } = useField('address');
-const { value: acceptTerms } = useField('acceptTerms');
-const { value: gender } = useField<string>('gender');
-const { value: age } = useField<number>('age');
+  // Define fields
+  const { value: firstName } = useField("firstName");
+  const { value: lastName } = useField("lastName");
+  const { value: email } = useField("email");
+  const { value: password } = useField("password");
+  const { value: confirmPassword } = useField("confirmPassword");
+  const { value: phoneNumber } = useField("phoneNumber");
+  const { value: address } = useField("address");
+  const { value: acceptTerms } = useField("acceptTerms");
+  const { value: gender } = useField<string>("gender");
+  const { value: age } = useField<number>("age");
 
-const handlePhotoUpload = (event: Event, photoType: "personal" | "id") => {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    const reader = new FileReader();
+  const handlePhotoUpload = (event: Event, photoType: "personal" | "id") => {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
 
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      switch (photoType) {
-        case "personal":
-          personalPhoto.value = file;
-          personalPhotoPreview.value = result;
-          break;
-        case "id":
-          idPhoto.value = file;
-          idPhotoPreview.value = result;
-          break;
-      }
-    };
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        switch (photoType) {
+          case "personal":
+            personalPhoto.value = file;
+            personalPhotoPreview.value = result;
+            break;
+          case "id":
+            idPhoto.value = file;
+            idPhotoPreview.value = result;
+            break;
+        }
+      };
 
-    reader.readAsDataURL(file);
-  }
-};
+      reader.readAsDataURL(file);
+    }
+  };
 
-const onSubmit = handleSubmit(async (values) => {
-  try {
-    isLoading.value = true;
-    error.value = "";
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      isLoading.value = true;
+      error.value = "";
 
-    const formData = new FormData();
-    formData.append('firstName', values.firstName);
-    formData.append('lastName', values.lastName);
-    formData.append('phoneNumber', values.phoneNumber);
-    formData.append('address', values.address);
-    formData.append('email', values.email);
-    formData.append('password', values.password);
-    formData.append('confirmPassword', values.confirmPassword);
-    formData.append('gender', values.gender);
-    formData.append('age', values.age.toString());
-    formData.append('personalPhoto', personalPhoto.value || '');
-    formData.append('idPhoto', idPhoto.value || '');
-    formData.append('role', 'patient');
+      const formData = new FormData();
+      formData.append("firstName", values.firstName);
+      formData.append("lastName", values.lastName);
+      formData.append("phoneNumber", values.phoneNumber);
+      formData.append("address", values.address);
+      formData.append("email", values.email);
+      formData.append("password", values.password);
+      formData.append("confirmPassword", values.confirmPassword);
+      formData.append("gender", values.gender);
+      formData.append("age", values.age.toString());
+      formData.append("personalPhoto", personalPhoto.value || "");
+      formData.append("idPhoto", idPhoto.value || "");
+      formData.append("role", "patient");
 
-    const response = await signup(formData);
+      const response = await signup(formData);
 
-    console.log("Signup successful:", response);
+      console.log("Signup successful:", response);
+      router.push("/patient-login");
+    } catch (err: any) {
+      error.value = err.response?.data?.message || "حدث خطأ أثناء إنشاء الحساب";
+      console.error("Signup error:", err);
+    } finally {
+      isLoading.value = false;
+    }
+  });
+
+  const goToLogin = () => {
     router.push("/patient-login");
-  } catch (err: any) {
-    error.value = err.response?.data?.message || "حدث خطأ أثناء إنشاء الحساب";
-    console.error("Signup error:", err);
-  } finally {
-    isLoading.value = false;
-  }
-});
-
-const goToLogin = () => {
-  router.push("/patient-login");
-};
+  };
 </script>
 
 <style scoped>

@@ -127,7 +127,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
@@ -148,6 +148,7 @@ onMounted(() => {
   window.addEventListener('resize', handleResize);
   console.log('Component mounted, fetching user data...');
   fetchUser();
+  document.addEventListener("click", handleClickOutside);
 });
 
 const fetchUser = async () => {
@@ -365,6 +366,24 @@ watch(user, (newValue) => {
 watch(form, (newValue) => {
   console.log('Form data changed:', newValue);
 }, { deep: true });
+
+const handleClickOutside = (event: MouseEvent) => {
+  const nav = document.querySelector('.mobile-nav');
+  const hamburger = document.querySelector('.hamburger');
+  if (
+    showSidebar.value &&
+    nav &&
+    !nav.contains(event.target as Node) &&
+    hamburger &&
+    !hamburger.contains(event.target as Node)
+  ) {
+    showSidebar.value = false;
+  }
+};
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <style scoped>
@@ -713,5 +732,55 @@ textarea:focus {
     pointer-events: auto;
     user-select: auto;
   }
+}
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1100;
+  position: absolute;
+  right: 1rem;
+  top: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+  .icons,
+  .nav {
+    display: none !important;
+  }
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 75vw;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -2px 0 8px #0002;
+    z-index: 2000;
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+}
+
+/* Transition for mobile nav */
+.mobile-nav-fade-enter-active,
+.mobile-nav-fade-leave-active {
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+}
+.mobile-nav-fade-enter-from,
+.mobile-nav-fade-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.mobile-nav-fade-enter-to,
+.mobile-nav-fade-leave-from {
+  opacity: 1;
+  transform: translateX(0);
 }
 </style> 

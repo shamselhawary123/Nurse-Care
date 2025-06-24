@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, computed, onMounted, watchEffect } from "vue";
+  import { ref, onMounted, watchEffect } from "vue";
   import { useRouter } from "vue-router";
 
   interface Notification {
@@ -23,9 +23,9 @@
   const showDropdown = ref(false);
 
   const toggleDarkMode = () => {
-    const isDark = document.documentElement.classList.toggle('dark');
+    const isDark = document.documentElement.classList.toggle("dark");
     isDarkMode.value = isDark;
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    localStorage.setItem("theme", isDark ? "dark" : "light");
   };
 
   const navigateToLogin = () => {
@@ -79,7 +79,8 @@
     if (res.ok) {
       const data = await res.json();
       notifications.value = data.notifications || [];
-      unreadCount.value = notifications.value.filter(n => !n.read).length;
+      unreadCount.value = notifications.value.filter((n) => !n.read).length;
+      console.log("Fetched notifications:", notifications.value);
     }
   };
 
@@ -92,14 +93,14 @@
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`/api/v1/notifications/${notif._id}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ read: true }),
       });
-      
+
       if (res.ok) {
         // Refetch notifications to update the list and count
         await fetchNotifications();
@@ -107,11 +108,10 @@
         const errorData = await res.json();
         console.error("Backend error:", errorData.message);
       }
-
     } catch (error) {
       console.error("Failed to send update request:", error);
     }
-    
+
     // Redirect to notifications page
     router.push("/notifications");
     showDropdown.value = false;
@@ -123,12 +123,15 @@
   };
 
   onMounted(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
+    const savedTheme = localStorage.getItem("theme");
+    if (
+      savedTheme === "dark" ||
+      (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
       isDarkMode.value = true;
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove("dark");
       isDarkMode.value = false;
     }
 
@@ -144,6 +147,7 @@
     document.addEventListener("click", () => {
       showDropdown.value = false;
     });
+    setInterval(fetchNotifications, 15000); // Poll every 15 seconds
   });
 
   watchEffect(() => {
@@ -155,10 +159,13 @@
   <header class="header">
     <div class="container">
       <!-- Hamburger Icon (Mobile Only) -->
-      <button class="hamburger" @click="toggleNav" aria-label="Toggle navigation">
-        <span :class="{'open': isNavOpen}"></span>
-        <span :class="{'open': isNavOpen}"></span>
-        <span :class="{'open': isNavOpen}"></span>
+      <button
+        class="hamburger"
+        @click="toggleNav"
+        aria-label="Toggle navigation">
+        <span :class="{ open: isNavOpen }"></span>
+        <span :class="{ open: isNavOpen }"></span>
+        <span :class="{ open: isNavOpen }"></span>
       </button>
       <!-- Icons -->
       <div class="icons">
@@ -190,23 +197,27 @@
               'fa-solid',
               'fa-bell',
               'cursor-pointer',
-              unreadCount > 0 ? 'has-unread' : ''
+              unreadCount > 0 ? 'has-unread' : '',
             ]"
-            title="الإشعارات"
-          ></i>
-          <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+            title="الإشعارات"></i>
+          <span v-if="unreadCount > 0" class="notification-badge">{{
+            unreadCount
+          }}</span>
           <div v-if="showDropdown" class="notification-dropdown">
-            <div v-if="notifications.length === 0" class="empty">لا توجد إشعارات جديدة</div>
+            <div v-if="notifications.length === 0" class="empty">
+              لا توجد إشعارات جديدة
+            </div>
             <div
               v-for="notif in notifications"
               :key="notif._id"
               class="notification-item"
               :class="{ unread: !notif.read }"
-              @click="openNotification(notif)"
-            >
+              @click="openNotification(notif)">
               {{ notif.message }}
             </div>
-            <div class="see-all" @click="goToNotifications">عرض كل الإشعارات</div>
+            <div class="see-all" @click="goToNotifications">
+              عرض كل الإشعارات
+            </div>
           </div>
         </div>
         <i
@@ -221,10 +232,18 @@
 
       <!-- Navigation Menu -->
       <nav class="nav" :class="{ active: isNavOpen }">
-        <router-link to="/" class="nav-link" @click="closeNav">الرئيسية</router-link>
-        <router-link to="/about" class="nav-link" @click="closeNav">حول</router-link>
-        <router-link to="/services" class="nav-link" @click="closeNav">الخدمات</router-link>
-        <router-link to="/contact" class="nav-link" @click="closeNav">اتصل بنا</router-link>
+        <router-link to="/" class="nav-link" @click="closeNav"
+          >الرئيسية</router-link
+        >
+        <router-link to="/about" class="nav-link" @click="closeNav"
+          >حول</router-link
+        >
+        <router-link to="/services" class="nav-link" @click="closeNav"
+          >الخدمات</router-link
+        >
+        <router-link to="/contact" class="nav-link" @click="closeNav"
+          >اتصل بنا</router-link
+        >
         <router-link
           v-if="isLoggedIn"
           to="/account"
@@ -273,7 +292,8 @@
     display: flex;
     gap: 1rem;
     align-items: center;
-    color: var(--color-text-secondary);
+    color: black;
+    font-size: 20px;
   }
   .icons .fa-solid:hover,
   .icons .fas:hover {
@@ -286,8 +306,9 @@
   }
 
   .nav-link {
-    color: var(--color-text-primary);
-    font-weight: 500;
+    /* color: var(--color-text-primary); */
+    color: black;
+    font-weight: 600;
     transition: color 0.3s;
     font-size: 1rem;
     position: relative;
@@ -308,7 +329,7 @@
   }
 
   .logo img {
-    height: 40px;
+    height: 66px;
     width: auto;
   }
 
@@ -474,6 +495,23 @@
     text-align: center;
     color: #888;
     padding: 1rem 0;
+  }
+
+  @keyframes unreadPulse {
+    0% {
+      box-shadow: 0 0 0 0 #1b7da540;
+    }
+    70% {
+      box-shadow: 0 0 0 10px #1b7da500;
+    }
+    100% {
+      box-shadow: 0 0 0 0 #1b7da500;
+    }
+  }
+  .notification-item.unread {
+    background: #f5faff;
+    font-weight: bold;
+    animation: unreadPulse 1.2s;
   }
 </style>
 

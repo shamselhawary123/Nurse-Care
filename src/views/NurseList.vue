@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, onMounted, watch, computed, onUnmounted } from "vue";
+  import { ref, onMounted, watch, onUnmounted } from "vue";
   import axios from "axios";
   import { getSpecialties, Specialty } from "../api/specialty";
   import FilterForm from "../components/FilterForm.vue";
@@ -24,7 +24,7 @@
     }>;
     isActive: boolean;
     address: string;
-    gender: 'male' | 'female';
+    gender: "male" | "female";
     averageRating?: number;
     reviewsCount?: number;
   }
@@ -40,7 +40,7 @@
   // Filter state
   const specialties = ref<Specialty[]>([]);
   const locations = ref<string[]>([]);
-  const genders = ref<string[]>(['male', 'female']);
+  // const genders = ref<string[]>(['male', 'female']);
 
   const selectedSpecialties = ref<string[]>([]);
   const selectedGender = ref<string | null>(null);
@@ -61,12 +61,11 @@
 
       // Fetch all nurses to extract unique locations
       const response = await axios.get(`/api/v1/users/nurses?limit=1000`);
-      if (response.data.status === 'success') {
+      if (response.data.status === "success") {
         const allNurses: Nurse[] = response.data.data;
-        const uniqueLocations = [...new Set(allNurses.map(n => n.address))];
+        const uniqueLocations = [...new Set(allNurses.map((n) => n.address))];
         locations.value = uniqueLocations;
       }
-
     } catch (err) {
       console.error("Error fetching filter options:", err);
     }
@@ -80,13 +79,18 @@
       let url = `/api/v1/users/nurses?page=${currentPage.value}&limit=${limit}&populate=specialties,departmentId`;
 
       // Add sorting for the first page
-      if (currentPage.value === 1 && !selectedSpecialties.value.length && !selectedGender.value && !selectedLocation.value) {
+      if (
+        currentPage.value === 1 &&
+        !selectedSpecialties.value.length &&
+        !selectedGender.value &&
+        !selectedLocation.value
+      ) {
         url += `&sort=-averageRating`;
       }
 
       // Add filters
       if (selectedSpecialties.value.length > 0) {
-        url += `&specialty=${selectedSpecialties.value.join(',')}`;
+        url += `&specialty=${selectedSpecialties.value.join(",")}`;
       }
       if (selectedGender.value) {
         url += `&gender=${selectedGender.value}`;
@@ -121,11 +125,15 @@
   };
 
   // Watch for filter changes to refetch nurses
-  watch([selectedSpecialties, selectedGender, selectedLocation], () => {
-    if (!isMobileView.value) {
-      applyFilters();
-    }
-  }, { deep: true });
+  watch(
+    [selectedSpecialties, selectedGender, selectedLocation],
+    () => {
+      if (!isMobileView.value) {
+        applyFilters();
+      }
+    },
+    { deep: true }
+  );
 
   // Watch for page changes
   watch(currentPage, () => {
@@ -136,10 +144,10 @@
     const onResize = () => {
       isMobileView.value = window.innerWidth < 768;
     };
-    window.addEventListener('resize', onResize);
+    window.addEventListener("resize", onResize);
 
     onUnmounted(() => {
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener("resize", onResize);
     });
 
     await fetchFilterOptions();
@@ -157,11 +165,11 @@
     router.push(`/book-nurse/${nurseId}`);
   };
 
-  const getRatingStars = (rating: number) => {
-    return Array(5)
-      .fill(0)
-      .map((_, index) => index < Math.floor(rating));
-  };
+  // const getRatingStars = (rating: number) => {
+  //   return Array(5)
+  //     .fill(0)
+  //     .map((_, index) => index < Math.floor(rating));
+  // };
 
   const resetFilters = () => {
     selectedSpecialties.value = [];
@@ -185,52 +193,58 @@
 
 <template>
   <div class="nurse-list-page">
-     <!-- Mobile Filter Button -->
-     <div class="md:hidden fixed bottom-6 right-6 z-20">
-      <button 
-        @click="isFilterPanelVisible = true" 
+    <!-- Mobile Filter Button -->
+    <div class="md:hidden fixed bottom-6 right-6 z-20">
+      <button
+        @click="isFilterPanelVisible = true"
         class="w-16 h-16 text-white rounded-full shadow-lg flex items-center justify-center"
-        style="background-color: #007b8f;"
-        aria-label="Open filters"
-      >
+        style="background-color: #007b8f"
+        aria-label="Open filters">
         <i class="fas fa-filter text-xl"></i>
       </button>
     </div>
 
-     <!-- Mobile Filter Panel -->
+    <!-- Mobile Filter Panel -->
     <transition name="slide-down">
-      <div v-if="isFilterPanelVisible" class="fixed inset-0 bg-white z-30 p-4 flex flex-col md:hidden">
+      <div
+        v-if="isFilterPanelVisible"
+        class="fixed inset-0 bg-white z-30 p-4 flex flex-col md:hidden">
         <div class="flex justify-between items-center mb-4 pb-4 border-b">
           <h3 class="text-xl font-bold text-primary">
             <i class="fas fa-filter ml-2"></i>
             حدد بحثك
           </h3>
-          <button @click="isFilterPanelVisible = false" aria-label="Close filters">
+          <button
+            @click="isFilterPanelVisible = false"
+            aria-label="Close filters">
             <i class="fas fa-times text-2xl text-gray-500"></i>
           </button>
         </div>
-        
+
         <div class="flex-grow overflow-y-auto">
-          <FilterForm 
-            :specialties="specialties" 
+          <FilterForm
+            :specialties="specialties"
             :locations="locations"
             v-model:selectedSpecialties="selectedSpecialties"
             v-model:selectedGender="selectedGender"
-            v-model:selectedLocation="selectedLocation"
-          />
+            v-model:selectedLocation="selectedLocation" />
         </div>
 
         <div class="mt-auto pt-4 border-t space-y-2">
-          <button @click="applyMobileFilters" class="w-full text-white py-3 rounded-lg font-semibold" style="background-color: #007b8f;">
+          <button
+            @click="applyMobileFilters"
+            class="w-full text-white py-3 rounded-lg font-semibold"
+            style="background-color: #007b8f">
             تطبيق الفلاتر
           </button>
-          <button @click="closePanelAndReset" class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold">
+          <button
+            @click="closePanelAndReset"
+            class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold">
             إعادة تعيين
           </button>
         </div>
       </div>
     </transition>
-
 
     <div class="container mx-auto px-4 py-8">
       <div class="flex flex-col md:flex-row gap-8">
@@ -242,14 +256,13 @@
               حدد بحثك
             </h3>
 
-            <FilterForm 
-              :specialties="specialties" 
+            <FilterForm
+              :specialties="specialties"
               :locations="locations"
               v-model:selectedSpecialties="selectedSpecialties"
               v-model:selectedGender="selectedGender"
-              v-model:selectedLocation="selectedLocation"
-            />
-            
+              v-model:selectedLocation="selectedLocation" />
+
             <button @click="resetFilters" class="reset-btn mt-4">
               إعادة تعيين الفلاتر
             </button>
@@ -274,7 +287,9 @@
           </div>
 
           <!-- Empty State -->
-          <div v-else-if="!nurses.length" class="text-center py-12 text-gray-500">
+          <div
+            v-else-if="!nurses.length"
+            class="text-center py-12 text-gray-500">
             لا يوجد ممرضين يطابقون خيارات البحث
           </div>
 
@@ -285,30 +300,33 @@
               :key="nurse._id"
               class="bg-surface rounded-2xl shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-1 border border-border"
               data-aos="fade-up"
-              :data-aos-delay="50 * (index % limit)"
-            >
-              <div class="p-6" @click="$router.push(`/nurse/${nurse._id}`)" style="cursor: pointer;">
+              :data-aos-delay="50 * (index % limit)">
+              <div
+                class="p-6"
+                @click="$router.push(`/nurse/${nurse._id}`)"
+                style="cursor: pointer">
                 <div class="flex flex-col items-center text-center">
                   <!-- Image -->
                   <div class="relative mb-4">
                     <img
                       :src="nurse.personalPhoto || '/img/a1.png'"
                       :alt="nurse.firstName + ' ' + nurse.lastName"
-                      class="w-28 h-28 rounded-full object-cover border-4 border-primary"
-                    />
+                      class="w-28 h-28 rounded-full object-cover border-4 border-primary" />
                     <span
                       v-if="nurse.isActive"
                       class="absolute bottom-1 right-1 block h-5 w-5 rounded-full bg-green-500 border-2 border-surface"
-                      title="متاح"
-                    ></span>
+                      title="متاح"></span>
                   </div>
 
                   <!-- Name & Department -->
                   <h2 class="text-xl font-bold text-text-primary">
                     {{ nurse.firstName }} {{ nurse.lastName }}
                   </h2>
-                  <div v-if="nurse.departmentId?.name" class="flex items-center text-text-secondary mt-1">
-                    <i class="fa-solid fa-stethoscope text-sm mr-1 text-primary"></i>
+                  <div
+                    v-if="nurse.departmentId?.name"
+                    class="flex items-center text-text-secondary mt-1">
+                    <i
+                      class="fa-solid fa-stethoscope text-sm mr-1 text-primary"></i>
                     <span class="text-sm font-medium">
                       {{ nurse.departmentId.name }}
                     </span>
@@ -319,24 +337,27 @@
                     <span
                       v-for="spec in nurse.specialties"
                       :key="spec._id"
-                      class="bg-primary-soft-bg text-primary px-3 py-1 rounded-full text-xs font-semibold"
-                    >
+                      class="bg-primary-soft-bg text-primary px-3 py-1 rounded-full text-xs font-semibold">
                       {{ spec.name }}
                     </span>
                   </div>
 
                   <!-- Contact Info -->
-                  <div class="mt-5 space-y-2 text-sm text-text-secondary w-full">
-                     <div class="flex items-center justify-center">
-                      <i class="fas fa-map-marker-alt text-primary w-4 text-center mr-2"></i>
+                  <div
+                    class="mt-5 space-y-2 text-sm text-text-secondary w-full">
+                    <div class="flex items-center justify-center">
+                      <i
+                        class="fas fa-map-marker-alt text-primary w-4 text-center mr-2"></i>
                       <span>{{ nurse.address }}</span>
                     </div>
                     <div class="flex items-center justify-center">
-                      <i class="fas fa-envelope text-primary w-4 text-center mr-2"></i>
+                      <i
+                        class="fas fa-envelope text-primary w-4 text-center mr-2"></i>
                       <span>{{ nurse.email }}</span>
                     </div>
                     <div class="flex items-center justify-center">
-                      <i class="fas fa-phone text-primary w-4 text-center mr-2"></i>
+                      <i
+                        class="fas fa-phone text-primary w-4 text-center mr-2"></i>
                       <span>{{ nurse.phoneNumber }}</span>
                     </div>
                   </div>
@@ -344,20 +365,19 @@
               </div>
 
               <!-- Action Buttons -->
-              <div class="bg-background-soft p-4 flex flex-col sm:flex-row gap-3 border-t border-border">
+              <div
+                class="bg-background-soft p-4 flex flex-col sm:flex-row gap-3 border-t border-border">
                 <button
                   @click.stop="sendRequest(nurse._id)"
                   class="flex-1 request-btn"
-                  :disabled="!nurse.isActive"
-                >
+                  :disabled="!nurse.isActive">
                   <i class="fas fa-paper-plane ml-2"></i>
                   {{ nurse.isActive ? "إرسال طلب" : "غير متاح" }}
                 </button>
                 <a
                   :href="'tel:' + nurse.phoneNumber"
                   class="flex-1 call-btn text-center"
-                  @click.stop
-                >
+                  @click.stop>
                   <i class="fas fa-phone-alt ml-2"></i>
                   اتصال
                 </a>
@@ -366,7 +386,9 @@
           </div>
 
           <!-- Pagination Bar -->
-          <div v-if="totalPages > 1" class="pagination-bar flex flex-wrap justify-center items-center mt-10 gap-2">
+          <div
+            v-if="totalPages > 1"
+            class="pagination-bar flex flex-wrap justify-center items-center mt-10 gap-2">
             <button
               v-for="page in Math.min(totalPages, 7)"
               :key="page"
@@ -374,7 +396,9 @@
               @click="goToPage(page)">
               {{ page }}
             </button>
-            <span v-if="totalPages > 7 && currentPage < totalPages - 3">...</span>
+            <span v-if="totalPages > 7 && currentPage < totalPages - 3"
+              >...</span
+            >
             <button
               v-if="totalPages > 7 && currentPage < totalPages - 3"
               class="pagination-btn"
@@ -474,7 +498,7 @@
     justify-content: center;
     transition: background 0.2s, color 0.2s;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   }
   .pagination-btn.active {
     background: var(--color-primary);

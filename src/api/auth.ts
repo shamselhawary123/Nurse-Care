@@ -2,21 +2,6 @@ import axios from "axios";
 
 const BASE_URL = "/api/v1";
 
-interface AxiosErrorResponse {
-  message?: string;
-  error?: string;
-  statusCode?: number;
-}
-
-interface CustomAxiosError extends Error {
-  code?: string;
-  response?: {
-    data?: AxiosErrorResponse;
-    status?: number;
-  };
-  isAxiosError: boolean;
-}
-
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -104,37 +89,40 @@ export const login = async (credentials: LoginCredentials) => {
 
 export const signup = async (data: FormData) => {
   try {
-    const endpoint = data.get('role') === 'patient' ? '/auth/patientSignup' : '/auth/nurseSignup';
+    const endpoint =
+      data.get("role") === "patient"
+        ? "/auth/patientSignup"
+        : "/auth/nurseSignup";
     const response = await api.post(endpoint, data, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
       timeout: 60000,
     });
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      console.error('Upload error details:', {
+      console.error("Upload error details:", {
         status: error.response?.status,
         data: error.response?.data,
         headers: error.response?.headers,
       });
-      if (error.code === 'ECONNABORTED') {
-        throw new Error('Request timeout - please try again');
+      if (error.code === "ECONNABORTED") {
+        throw new Error("Request timeout - please try again");
       }
       if (!error.response) {
-        throw new Error('Network error - please check your connection');
+        throw new Error("Network error - please check your connection");
       }
       const serverMessage =
         error.response.data?.message ||
         error.response.data?.error ||
-        'Registration failed';
+        "Registration failed";
       throw new Error(serverMessage);
     }
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error('An unknown error occurred during signup');
+    throw new Error("An unknown error occurred during signup");
   }
 };
 

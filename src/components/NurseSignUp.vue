@@ -39,7 +39,9 @@
                 required
                 class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="الاسم الأول" />
-              <span v-if="errors.firstName" class="text-red-500 text-xs mt-1">{{ errors.firstName }}</span>
+              <span v-if="errors.firstName" class="text-red-500 text-xs mt-1">{{
+                errors.firstName
+              }}</span>
             </div>
             <div>
               <label
@@ -56,23 +58,50 @@
                 required
                 class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="الاسم الأخير" />
-              <span v-if="errors.lastName" class="text-red-500 text-xs mt-1">{{ errors.lastName }}</span>
+              <span v-if="errors.lastName" class="text-red-500 text-xs mt-1">{{
+                errors.lastName
+              }}</span>
             </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="gender" class="block text-sm font-medium text-gray-700">النوع</label>
-              <select id="gender" v-model="gender" name="gender" required :class="{ 'border-red-500': errors.gender }" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+              <label
+                for="gender"
+                class="block text-sm font-medium text-gray-700"
+                >النوع</label
+              >
+              <select
+                id="gender"
+                v-model="gender"
+                name="gender"
+                required
+                :class="{ 'border-red-500': errors.gender }"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
                 <option value="" disabled>اختر النوع</option>
                 <option value="male">ذكر</option>
                 <option value="female">أنثى</option>
               </select>
-              <span v-if="errors.gender" class="text-red-500 text-xs mt-1">{{ errors.gender }}</span>
+              <span v-if="errors.gender" class="text-red-500 text-xs mt-1">{{
+                errors.gender
+              }}</span>
             </div>
             <div>
-              <label for="age" class="block text-sm font-medium text-gray-700">العمر</label>
-              <input id="age" v-model="age" name="age" type="number" min="1" required :class="{ 'border-red-500': errors.age }" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" placeholder="أدخل عمرك" />
-              <span v-if="errors.age" class="text-red-500 text-xs mt-1">{{ errors.age }}</span>
+              <label for="age" class="block text-sm font-medium text-gray-700"
+                >العمر</label
+              >
+              <input
+                id="age"
+                v-model="age"
+                name="age"
+                type="number"
+                min="1"
+                required
+                :class="{ 'border-red-500': errors.age }"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                placeholder="أدخل عمرك" />
+              <span v-if="errors.age" class="text-red-500 text-xs mt-1">{{
+                errors.age
+              }}</span>
             </div>
           </div>
           <div>
@@ -90,11 +119,15 @@
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
               placeholder="أدخل رقم هاتفك" />
-            <span v-if="errors.phoneNumber" class="text-red-500 text-xs mt-1">{{ errors.phoneNumber }}</span>
+            <span v-if="errors.phoneNumber" class="text-red-500 text-xs mt-1">{{
+              errors.phoneNumber
+            }}</span>
           </div>
 
           <div>
-            <label for="address" class="block text-sm font-medium text-gray-700">العنوان</label>
+            <label for="address" class="block text-sm font-medium text-gray-700"
+              >العنوان</label
+            >
             <select
               id="address"
               v-model="address"
@@ -123,9 +156,11 @@
               <option>قرية ميت سلسيل</option>
               <option>قرية ميت خميس</option>
               <option>قرية نبروه</option>
-              <option>قرية البوها </option>
+              <option>قرية البوها</option>
             </select>
-            <span v-if="errors.address" class="text-red-500 text-xs mt-1">{{ errors.address }}</span>
+            <span v-if="errors.address" class="text-red-500 text-xs mt-1">{{
+              errors.address
+            }}</span>
           </div>
 
           <div>
@@ -144,7 +179,7 @@
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm text-right">
               <option value="" disabled>
                 {{
-                  loadingSpecialties ? 'جاري تحميل التخصصات...' : 'اختر تخصصك'
+                  loadingSpecialties ? "جاري تحميل التخصصات..." : "اختر تخصصك"
                 }}
               </option>
               <option v-for="s in specialties" :key="s._id" :value="s._id">
@@ -156,8 +191,7 @@
             }}</span>
             <span
               v-if="specialties.length === 0 && !loadingSpecialties"
-              class="text-red-500 text-xs mt-1"
-            >
+              class="text-red-500 text-xs mt-1">
               لا توجد تخصصات متاحة
             </span>
           </div>
@@ -175,8 +209,7 @@
               :class="{ 'border-red-500': errors.description }"
               rows="4"
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-              placeholder="أدخل وصفاً عن نفسك وخبراتك"
-            ></textarea>
+              placeholder="أدخل وصفاً عن نفسك وخبراتك"></textarea>
             <span v-if="errors.description" class="text-red-500 text-xs mt-1">{{
               errors.description
             }}</span>
@@ -195,7 +228,9 @@
               required
               class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
               placeholder="أدخل بريدك الإلكتروني" />
-            <span v-if="errors.email" class="text-red-500 text-xs mt-1">{{ errors.email }}</span>
+            <span v-if="errors.email" class="text-red-500 text-xs mt-1">{{
+              errors.email
+            }}</span>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -214,7 +249,9 @@
                 required
                 class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="إنشاء كلمة مرور" />
-              <span v-if="errors.password" class="text-red-500 text-xs mt-1">{{ errors.password }}</span>
+              <span v-if="errors.password" class="text-red-500 text-xs mt-1">{{
+                errors.password
+              }}</span>
             </div>
             <div>
               <label
@@ -231,11 +268,13 @@
                 required
                 class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="تأكيد كلمة المرور" />
-              <span v-if="errors.confirmPassword" class="text-red-500 text-xs mt-1">{{ errors.confirmPassword }}</span>
+              <span
+                v-if="errors.confirmPassword"
+                class="text-red-500 text-xs mt-1"
+                >{{ errors.confirmPassword }}</span
+              >
             </div>
           </div>
-
-
 
           <!-- Photo Upload Section -->
           <div class="space-y-6">
@@ -387,294 +426,305 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { signup } from '../api/auth';
-import { getSpecialties, type Specialty } from '../api/specialty';
-import { useForm, useField } from 'vee-validate';
-import * as yup from 'yup';
+  import { ref, onMounted } from "vue";
+  import { useRouter } from "vue-router";
+  import { signup } from "../api/auth";
+  import { getSpecialties, type Specialty } from "../api/specialty";
+  import { useForm, useField } from "vee-validate";
+  import * as yup from "yup";
 
-interface SignUpData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  phoneNumber: string;
-  address: string;
-  specialty: string;
-  description: string;
-  role: 'nurse' | 'patient';
-  personalPhoto?: File;
-  businessCardPhoto?: File;
-  idPhoto?: File;
-  gender: string;
-  age: number;
-}
-
-const router = useRouter();
-const error = ref('');
-const isLoading = ref(false);
-const specialties = ref<Specialty[]>([]);
-const loadingSpecialties = ref(true);
-
-// Photo handling refs
-const personalPhoto = ref<File | null>(null);
-const businessCardPhoto = ref<File | null>(null);
-const idPhoto = ref<File | null>(null);
-const personalPhotoPreview = ref('');
-const businessCardPhotoPreview = ref('');
-const idPhotoPreview = ref('');
-
-// Validation schema
-const schema = yup.object({
-  firstName: yup
-    .string()
-    .required('الاسم الأول مطلوب')
-    .min(2, 'الاسم الأول يجب أن يكون على الأقل حرفين'),
-  lastName: yup
-    .string()
-    .required('الاسم الأخير مطلوب')
-    .min(2, 'الاسم الأخير يجب أن يكون على الأقل حرفين'),
-  email: yup
-    .string()
-    .required('البريد الإلكتروني مطلوب')
-    .email('البريد الإلكتروني غير صالح'),
-  password: yup
-    .string()
-    .required('كلمة المرور مطلوبة')
-    .min(6, 'كلمة المرور يجب أن تكون على الأقل 6 أحرف')
-    .matches(/[0-9]/, 'يجب أن تحتوي كلمة المرور على رقم واحد على الأقل'),
-  confirmPassword: yup
-    .string()
-    .required('تأكيد كلمة المرور مطلوب')
-    .oneOf([yup.ref('password')], 'كلمات المرور غير متطابقة'),
-  phoneNumber: yup
-    .string()
-    .required('رقم الهاتف مطلوب')
-    .matches(
-      /^01[0-9]{9}$/,
-      'يجب أن يبدأ الرقم بـ 01 ويجب أن يكون مكون من 11 رقم فقط'
-    )
-    .length(11, 'يجب أن يكون الرقم مكون من 11 رقم فقط'),
-  address: yup.string().required('العنوان مطلوب'),
-  specialty: yup.string().required('التخصص مطلوب'),
-  description: yup.string(),
-  acceptTerms: yup.boolean().oneOf([true], 'يجب الموافقة على الشروط والأحكام'),
-  gender: yup.string().required('النوع مطلوب').oneOf(['male', 'female'], 'النوع غير صالح'),
-  age: yup.number().required('العمر مطلوب').min(1, 'العمر يجب أن يكون أكبر من 0'),
-});
-
-// Initialize form
-const { handleSubmit, errors, resetForm } = useForm({
-  validationSchema: schema,
-});
-
-// Define fields with proper types
-const { value: firstName } = useField<string>('firstName');
-const { value: lastName } = useField<string>('lastName');
-const { value: email } = useField<string>('email');
-const { value: password } = useField<string>('password');
-const { value: confirmPassword } = useField<string>('confirmPassword');
-const { value: phoneNumber } = useField<string>('phoneNumber');
-const { value: address } = useField<string>('address');
-const { value: specialty } = useField<string>('specialty');
-const { value: description } = useField<string>('description');
-const { value: acceptTerms } = useField<boolean>('acceptTerms');
-const { value: gender } = useField<string>('gender');
-const { value: age } = useField<number>('age');
-
-// Fetch specialties on component mount
-onMounted(async () => {
-  try {
-    loadingSpecialties.value = true;
-    console.log('Fetching specialties...');
-    specialties.value = await getSpecialties();
-    console.log('Fetched specialties:', specialties.value);
-  } catch (err) {
-    console.error('Error fetching specialties:', err);
-    error.value = 'حدث خطأ أثناء جلب التخصصات';
-  } finally {
-    loadingSpecialties.value = false;
+  interface SignUpData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    phoneNumber: string;
+    address: string;
+    specialty: string;
+    description: string;
+    role: "nurse" | "patient";
+    personalPhoto?: File;
+    businessCardPhoto?: File;
+    idPhoto?: File;
+    gender: string;
+    age: number;
+    acceptTerms: boolean;
   }
-});
 
-const handlePhotoUpload = (
-  event: Event,
-  photoType: 'personal' | 'businessCard' | 'id'
-) => {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    const reader = new FileReader();
+  const router = useRouter();
+  const error = ref("");
+  const isLoading = ref(false);
+  const specialties = ref<Specialty[]>([]);
+  const loadingSpecialties = ref(true);
 
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      switch (photoType) {
-        case 'personal':
-          personalPhoto.value = file;
-          personalPhotoPreview.value = result;
-          break;
-        case 'businessCard':
-          businessCardPhoto.value = file;
-          businessCardPhotoPreview.value = result;
-          break;
-        case 'id':
-          idPhoto.value = file;
-          idPhotoPreview.value = result;
-          break;
-      }
-    };
+  // Photo handling refs
+  const personalPhoto = ref<File | null>(null);
+  const businessCardPhoto = ref<File | null>(null);
+  const idPhoto = ref<File | null>(null);
+  const personalPhotoPreview = ref("");
+  const businessCardPhotoPreview = ref("");
+  const idPhotoPreview = ref("");
 
-    reader.readAsDataURL(file);
-  }
-};
+  // Validation schema
+  const schema = yup.object({
+    firstName: yup
+      .string()
+      .required("الاسم الأول مطلوب")
+      .min(2, "الاسم الأول يجب أن يكون على الأقل حرفين"),
+    lastName: yup
+      .string()
+      .required("الاسم الأخير مطلوب")
+      .min(2, "الاسم الأخير يجب أن يكون على الأقل حرفين"),
+    email: yup
+      .string()
+      .required("البريد الإلكتروني مطلوب")
+      .email("البريد الإلكتروني غير صالح"),
+    password: yup
+      .string()
+      .required("كلمة المرور مطلوبة")
+      .min(6, "كلمة المرور يجب أن تكون على الأقل 6 أحرف")
+      .matches(/[0-9]/, "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل"),
+    confirmPassword: yup
+      .string()
+      .required("تأكيد كلمة المرور مطلوب")
+      .oneOf([yup.ref("password")], "كلمات المرور غير متطابقة"),
+    phoneNumber: yup
+      .string()
+      .required("رقم الهاتف مطلوب")
+      .matches(
+        /^01[0-9]{9}$/,
+        "يجب أن يبدأ الرقم بـ 01 ويجب أن يكون مكون من 11 رقم فقط"
+      )
+      .length(11, "يجب أن يكون الرقم مكون من 11 رقم فقط"),
+    address: yup.string().required("العنوان مطلوب"),
+    specialty: yup.string().required("التخصص مطلوب"),
+    description: yup.string(),
+    acceptTerms: yup
+      .boolean()
+      .oneOf([true], "يجب الموافقة على الشروط والأحكام"),
+    gender: yup
+      .string()
+      .required("النوع مطلوب")
+      .oneOf(["male", "female"], "النوع غير صالح"),
+    age: yup
+      .number()
+      .required("العمر مطلوب")
+      .min(1, "العمر يجب أن يكون أكبر من 0"),
+  });
 
-const onSubmit = handleSubmit(async (values) => {
-  try {
-    isLoading.value = true;
-    error.value = '';
+  // Initialize form
+  const { handleSubmit, errors } = useForm<SignUpData>({
+    validationSchema: schema,
+  });
 
-    const formData = new FormData();
-    formData.append('firstName', values.firstName);
-    formData.append('lastName', values.lastName);
-    formData.append('email', values.email);
-    formData.append('password', values.password);
-    formData.append('confirmPassword', values.confirmPassword);
-    formData.append('phoneNumber', values.phoneNumber);
-    formData.append('address', values.address);
-    formData.append('role', 'nurse');
-    formData.append('specialty', values.specialty);
-    formData.append('description', values.description || '');
-    formData.append('acceptTerms', values.acceptTerms.toString());
-    formData.append('gender', values.gender);
-    formData.append('age', values.age.toString());
+  // Define fields with proper types
+  const { value: firstName } = useField<string>("firstName");
+  const { value: lastName } = useField<string>("lastName");
+  const { value: email } = useField<string>("email");
+  const { value: password } = useField<string>("password");
+  const { value: confirmPassword } = useField<string>("confirmPassword");
+  const { value: phoneNumber } = useField<string>("phoneNumber");
+  const { value: address } = useField<string>("address");
+  const { value: specialty } = useField<string>("specialty");
+  const { value: description } = useField<string>("description");
+  const { value: acceptTerms } = useField<boolean>("acceptTerms");
+  const { value: gender } = useField<string>("gender");
+  const { value: age } = useField<number>("age");
 
-    if (personalPhoto.value) formData.append('personalPhoto', personalPhoto.value);
-    if (businessCardPhoto.value) formData.append('businessCardPhoto', businessCardPhoto.value);
-    if (idPhoto.value) formData.append('idPhoto', idPhoto.value);
-
-    console.log('Signup data:', formData); // Debug log
-
-    const response = await signup(formData);
-
-    console.log('Signup successful:', response);
-
-    if (response.token) {
-      localStorage.setItem('token', response.token);
+  // Fetch specialties on component mount
+  onMounted(async () => {
+    try {
+      loadingSpecialties.value = true;
+      console.log("Fetching specialties...");
+      specialties.value = await getSpecialties();
+      console.log("Fetched specialties:", specialties.value);
+    } catch (err) {
+      console.error("Error fetching specialties:", err);
+      error.value = "حدث خطأ أثناء جلب التخصصات";
+    } finally {
+      loadingSpecialties.value = false;
     }
+  });
 
-    router.push('/nurse-login');
-  } catch (err: any) {
-    console.error('Signup error details:', err);
-    error.value = err.message || 'حدث خطأ أثناء إنشاء الحساب';
-  } finally {
-    isLoading.value = false;
-  }
-});
+  const handlePhotoUpload = (
+    event: Event,
+    photoType: "personal" | "businessCard" | "id"
+  ) => {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const reader = new FileReader();
 
-const goToLogin = () => {
-  router.push('/nurse-login');
-};
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        switch (photoType) {
+          case "personal":
+            personalPhoto.value = file;
+            personalPhotoPreview.value = result;
+            break;
+          case "businessCard":
+            businessCardPhoto.value = file;
+            businessCardPhotoPreview.value = result;
+            break;
+          case "id":
+            idPhoto.value = file;
+            idPhotoPreview.value = result;
+            break;
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      isLoading.value = true;
+      error.value = "";
+
+      const formData = new FormData();
+      formData.append("firstName", values.firstName);
+      formData.append("lastName", values.lastName);
+      formData.append("email", values.email);
+      formData.append("password", values.password);
+      formData.append("confirmPassword", values.confirmPassword);
+      formData.append("phoneNumber", values.phoneNumber);
+      formData.append("address", values.address);
+      formData.append("role", "nurse");
+      formData.append("specialty", values.specialty);
+      formData.append("description", values.description || "");
+      formData.append("acceptTerms", values.acceptTerms.toString());
+      formData.append("gender", values.gender);
+      formData.append("age", values.age.toString());
+
+      if (personalPhoto.value)
+        formData.append("personalPhoto", personalPhoto.value);
+      if (businessCardPhoto.value)
+        formData.append("businessCardPhoto", businessCardPhoto.value);
+      if (idPhoto.value) formData.append("idPhoto", idPhoto.value);
+
+      console.log("Signup data:", formData); // Debug log
+
+      const response = await signup(formData);
+
+      console.log("Signup successful:", response);
+
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+      }
+
+      router.push("/nurse-login");
+    } catch (err: any) {
+      console.error("Signup error details:", err);
+      error.value = err.message || "حدث خطأ أثناء إنشاء الحساب";
+    } finally {
+      isLoading.value = false;
+    }
+  });
+
+  const goToLogin = () => {
+    router.push("/nurse-login");
+  };
 </script>
 
 <style scoped>
-.min-h-screen {
-  direction: rtl;
-  background-color: #f8fafc;
-}
-
-input,
-textarea {
-  text-align: right;
-  background-color: #fff;
-}
-
-input::placeholder,
-textarea::placeholder {
-  text-align: right;
-}
-
-label {
-  text-align: right;
-}
-
-.error-message {
-  text-align: right;
-}
-
-.bg-primary {
-  background-color: #007b8f;
-}
-
-.hover\:bg-secondary:hover {
-  background-color: #49a8d3;
-}
-
-.text-primary {
-  color: #007b8f;
-}
-
-.hover\:text-secondary:hover {
-  color: #49a8d3;
-}
-
-/* Add button transitions */
-button {
-  transition: all 0.3s ease;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
-button:disabled {
-  transform: none;
-}
-
-.hover\:bg-gray-50:hover {
-  transition: background-color 0.3s ease;
-}
-
-.hover\:bg-secondary:hover {
-  transition: background-color 0.3s ease;
-}
-
-@media (prefers-color-scheme: dark) {
   .min-h-screen {
-    background-color: #eee;
-  }
-
-  .max-w-2xl {
+    direction: rtl;
     background-color: #f8fafc;
   }
 
   input,
   textarea {
+    text-align: right;
     background-color: #fff;
-    border-color: #3333;
-    color: #333;
   }
 
   input::placeholder,
   textarea::placeholder {
-    color: #444;
+    text-align: right;
   }
 
-  label,
-  h2,
-  p {
-    color: #333;
+  label {
+    text-align: right;
   }
-}
 
-.error-input {
-  border-color: #ef4444 !important;
-}
+  .error-message {
+    text-align: right;
+  }
 
-.error-message {
-  color: #ef4444;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
-}
+  .bg-primary {
+    background-color: #007b8f;
+  }
+
+  .hover\:bg-secondary:hover {
+    background-color: #49a8d3;
+  }
+
+  .text-primary {
+    color: #007b8f;
+  }
+
+  .hover\:text-secondary:hover {
+    color: #49a8d3;
+  }
+
+  /* Add button transitions */
+  button {
+    transition: all 0.3s ease;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  button:disabled {
+    transform: none;
+  }
+
+  .hover\:bg-gray-50:hover {
+    transition: background-color 0.3s ease;
+  }
+
+  .hover\:bg-secondary:hover {
+    transition: background-color 0.3s ease;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .min-h-screen {
+      background-color: #eee;
+    }
+
+    .max-w-2xl {
+      background-color: #f8fafc;
+    }
+
+    input,
+    textarea {
+      background-color: #fff;
+      border-color: #3333;
+      color: #333;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #444;
+    }
+
+    label,
+    h2,
+    p {
+      color: #333;
+    }
+  }
+
+  .error-input {
+    border-color: #ef4444 !important;
+  }
+
+  .error-message {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
 </style>

@@ -64,17 +64,28 @@
       isLoading.value = true;
       error.value = "";
 
-      const response = await signup({
-        firstName: firstName.value,
-        lastName: lastName.value,
-        email: email.value,
-        password: password.value,
-        phoneNumber: phoneNumber.value,
-        address: address.value,
-        personalPhoto: personalPhoto.value || undefined,
-        businessCardPhoto: businessCardPhoto.value || undefined,
-        idPhoto: idPhoto.value || undefined,
-      });
+      // Create FormData object for file uploads
+      const formData = new FormData();
+      formData.append("firstName", firstName.value);
+      formData.append("lastName", lastName.value);
+      formData.append("email", email.value);
+      formData.append("password", password.value);
+      formData.append("phoneNumber", phoneNumber.value);
+      formData.append("address", address.value);
+      formData.append("role", "patient"); // Default role as patient, adjust as needed
+
+      // Append files if they exist
+      if (personalPhoto.value) {
+        formData.append("personalPhoto", personalPhoto.value);
+      }
+      if (businessCardPhoto.value) {
+        formData.append("businessCardPhoto", businessCardPhoto.value);
+      }
+      if (idPhoto.value) {
+        formData.append("idPhoto", idPhoto.value);
+      }
+
+      const response = await signup(formData);
 
       console.log("Signup successful:", response);
       router.push("/login"); // Redirect to login page after successful signup
