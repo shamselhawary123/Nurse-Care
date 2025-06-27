@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+import api from '@/api/axios';
 
 const route = useRoute();
 const router = useRouter();
@@ -16,7 +16,7 @@ const notes = ref('');
 
 const fetchNurseName = async () => {
   try {
-    const response = await axios.get(`/api/v1/users/nurses/${route.params.id}`);
+    const response = await api.get(`/v1/users/nurses/${route.params.id}`);
     if (response.data.success) {
       const nurse = response.data.data;
       nurseName.value = `${nurse.firstName} ${nurse.lastName}`;
@@ -48,7 +48,7 @@ const submitBooking = async () => {
       description: notes.value || 'حجز موعد مع الممرضة',
     };
 
-    await axios.post('/api/v1/request', bookingData, {
+    await api.post('/v1/request', bookingData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

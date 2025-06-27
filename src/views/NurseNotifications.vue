@@ -1,6 +1,6 @@
 <!-- <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import axios from 'axios';
+import api from '@/api/axios';
 import { io } from 'socket.io-client';
 import { useToast } from 'vue-toastification';
 
@@ -28,7 +28,7 @@ const fetchRequests = async () => {
   try {
     loading.value = true;
     const token = localStorage.getItem('token');
-    const res = await axios.get('/api/v1/request/received', {
+    const res = await api.get('/v1/request/received', {
       headers: { Authorization: `Bearer ${token}` },
     });
     // Only show pending requests
@@ -43,7 +43,7 @@ const fetchRequests = async () => {
 const handleAction = async (requestId: string, action: 'Approved' | 'Rejected') => {
   try {
     const token = localStorage.getItem('token');
-    await axios.put(`/api/v1/request/${requestId}/${action}`, {}, {
+    await api.put(`/v1/request/${requestId}/${action}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (action === 'Rejected') {

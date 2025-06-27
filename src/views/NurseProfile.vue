@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref, onMounted, onUnmounted, computed } from "vue";
   import { useRoute } from "vue-router";
-  import axios from "axios";
+  import api from '@/api/axios';
 
   interface Nurse {
     _id: string;
@@ -55,8 +55,8 @@
   const fetchNurseDetails = async () => {
     try {
       loading.value = true;
-      const response = await axios.get(
-        `/api/v1/users/nurses/${route.params.id}`
+      const response = await api.get(
+        `/v1/users/nurses/${route.params.id}`
       );
 
       console.log("Response:", response.data);
@@ -76,7 +76,7 @@
   };
 
   const fetchReviews = async () => {
-    const res = await axios.get(`/api/v1/reviews/nurse/${route.params.id}`);
+    const res = await api.get(`/v1/reviews/nurse/${route.params.id}`);
     reviews.value = res.data.data;
   };
 
@@ -84,8 +84,8 @@
     isSubmitting.value = true;
     const token = localStorage.getItem("token");
     try {
-      await axios.post(
-        `/api/v1/reviews/nurse/${route.params.id}`,
+      await api.post(
+        `/v1/reviews/nurse/${route.params.id}`,
         newReview.value,
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, onMounted, watch, onUnmounted } from "vue";
-  import axios from "axios";
+  import api from "@/api/axios";
   import { getSpecialties, Specialty } from "../api/specialty";
   import FilterForm from "../components/FilterForm.vue";
   import { useToast } from "vue-toastification";
@@ -60,7 +60,7 @@
       specialties.value = fetchedSpecialties;
 
       // Fetch all nurses to extract unique locations
-      const response = await axios.get(`/api/v1/users/nurses?limit=1000`);
+      const response = await api.get(`/v1/users/nurses?limit=1000`);
       if (response.data.status === "success") {
         const allNurses: Nurse[] = response.data.data;
         const uniqueLocations = [...new Set(allNurses.map((n) => n.address))];
@@ -76,7 +76,7 @@
     try {
       loading.value = true;
       error.value = null;
-      let url = `/api/v1/users/nurses?page=${currentPage.value}&limit=${limit}&populate=specialties,departmentId`;
+      let url = `/v1/users/nurses?page=${currentPage.value}&limit=${limit}&populate=specialties,departmentId`;
 
       // Add sorting for the first page
       if (
@@ -99,7 +99,7 @@
         url += `&address=${selectedLocation.value}`;
       }
 
-      const response = await axios.get(url);
+      const response = await api.get(url);
       if (response.data.status === "success") {
         nurses.value = response.data.data;
         totalNurses.value = response.data.total;

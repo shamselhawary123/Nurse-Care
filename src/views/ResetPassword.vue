@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref } from "vue";
   import { useRouter } from "vue-router";
-  import axios from "axios";
+  import api from '@/api/axios';
 
   const router = useRouter();
   const password = ref("");
@@ -34,7 +34,7 @@
         return;
       }
 
-      const response = await axios.put("/api/v1/auth/resetPassword", {
+      const response = await api.put("/v1/auth/resetPassword", {
         email: email,
         newPassword: password.value,
       });
@@ -66,6 +66,9 @@
       isLoading.value = false;
     }
   };
+
+  localStorage.clear();
+  sessionStorage.clear();
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <!-- <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import axios from 'axios';
+import api from '@/api/axios';
 import { io } from 'socket.io-client';
 import { useToast } from 'vue-toastification';
 
@@ -28,7 +28,7 @@ const fetchRequests = async () => {
   try {
     loading.value = true;
     const token = localStorage.getItem('token');
-    const res = await axios.get('/api/v1/request/sent', {
+    const res = await api.get('/v1/request/sent', {
       headers: { Authorization: `Bearer ${token}` },
     });
     requests.value = res.data.data;

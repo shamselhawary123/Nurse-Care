@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref, onMounted, onUnmounted } from "vue";
   import { useRouter } from "vue-router";
-  import axios from "axios";
+  import api from '@/api/axios';
   import io, { Socket } from "socket.io-client";
   import { useToast } from "vue-toastification";
 
@@ -140,7 +140,7 @@
     try {
       loading.value = true;
       const token = localStorage.getItem("token");
-      const res = await axios.get("/api/v1/request/received", {
+      const res = await api.get("/v1/request/received", {
         headers: { Authorization: `Bearer ${token}` },
       });
       requests.value = res.data.data;
@@ -154,7 +154,7 @@
   // const handleAction = async (requestId: string, action: 'accept' | 'reject') => {
   //   try {
   //     const token = localStorage.getItem('token');
-  //     await axios.put(`/api/v1/request/${requestId}/${action}`, {}, {
+  //     await api.put(`/v1/request/${requestId}/${action}`, {}, {
   //       headers: { Authorization: `Bearer ${token}` },
   //     });
   //     if (action === 'reject') {

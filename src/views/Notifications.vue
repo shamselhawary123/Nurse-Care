@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, onMounted, onUnmounted } from "vue";
-  import axios from "axios";
+  import api from '@/api/axios';
   import { io } from "socket.io-client";
   import { useToast } from "vue-toastification";
 
@@ -38,11 +38,11 @@
       loading.value = true;
       const token = localStorage.getItem("token");
       console.log("User role:", role);
-      let url = "/api/v1/request/received";
+      let url = "/v1/request/received";
       if (role === "patient") {
-        url = "/api/v1/request/sent";
+        url = "/v1/request/sent";
       }
-      const res = await axios.get(url, {
+      const res = await api.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -60,8 +60,8 @@
   ) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
-        `/api/v1/request/${requestId}/${action}`,
+      await api.put(
+        `/v1/request/${requestId}/${action}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

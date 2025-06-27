@@ -1,9 +1,10 @@
 // src/api/axios.ts
-
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: import.meta.env.PROD
+    ? "https://health-care-zeta-henna.vercel.app/api" // لينك الباك اند على Vercel
+    : "/api", // هيفعل البروكسي وقت التطوير
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

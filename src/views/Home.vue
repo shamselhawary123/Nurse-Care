@@ -6,7 +6,7 @@
   import { Autoplay, EffectFade } from 'swiper/modules';
   import 'swiper/css';
   import 'swiper/css/effect-fade';
-  import axios from 'axios';
+  import api from '@/api/axios';
 
   interface Nurse {
     _id: string;
@@ -109,7 +109,7 @@
     try {
       nursesLoading.value = true;
       nursesError.value = null;
-      const response = await axios.get('/api/v1/users/nurses?sort=-averageRating&limit=3');
+      const response = await api.get('/v1/users/nurses?sort=-averageRating&limit=3');
       if (response.data && response.data.status === 'success') {
         topRatedNurses.value = response.data.data;
       }

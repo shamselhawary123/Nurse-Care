@@ -129,7 +129,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import api from '@/api/axios';
 
 const router = useRouter();
 const user = ref<any>(null);
@@ -160,7 +160,7 @@ const fetchUser = async () => {
   }
   try {
     console.log('Fetching user data...');
-    const res = await axios.get(`/api/v1/users/${userId}`, {
+    const res = await api.get(`/users/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     
@@ -237,7 +237,7 @@ const removePhoto = () => {
     const formData = new FormData();
     formData.append('personalPhoto', '');
     
-    axios.put(`/api/v1/users/${userId}`, formData, {
+    api.put(`/users/${userId}`, formData, {
       headers: { 
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
@@ -296,8 +296,8 @@ const saveProfile = async () => {
     }
 
     console.log('Sending update request...');
-    const response = await axios.put(
-      `/api/v1/users/${userId}`,
+    const response = await api.put(
+      `/users/${userId}`,
       formData,
       {
         headers: { 
